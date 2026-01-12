@@ -190,6 +190,13 @@ Areas of interest:
 - Command templates for specific frameworks
 - Cross-platform improvements
 
+## Documentation
+
+- **[Workflows Guide](docs/WORKFLOWS.md)** — Day-to-day usage patterns, the PIV loop, best practices
+- **[Configuration Guide](docs/CONFIGURATION.md)** — All config options, routing, provider setup
+- **[Templates Guide](docs/TEMPLATES.md)** — Customizing and creating command templates
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** — Common issues and solutions
+
 ## Inspiration
 
 This project was inspired by [Cole Medin](https://www.youtube.com/@ColeMedin)'s excellent video on agentic coding workflows:
