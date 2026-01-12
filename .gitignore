@@ -1,0 +1,40 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# PowerShell
+*.ps1xml
+
+# User-specific files
+config.json
+*.local.ps1
+
+# Test outputs
+test-output/
+coverage/
+
+# Build artifacts
+*.zip
+dist/
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+.claude/active/
+.claude/metrics/
+.claude/commit_msg.txt
