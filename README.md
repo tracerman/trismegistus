@@ -1,5 +1,14 @@
 # Trismegistus
 
+```
+  ___________      .__                                .__          __                
+  \__    ___/______|__| ______ _____   ____   _____ |__|  ______/  |_ __ __  ______
+    |    |  \_  __ \  |/  ___//     \_/ __ \ / ___\ |  | /  ___/\   __\  |  \/  ___/
+    |    |   |  | \/  |\___ \|  Y Y  \  ___// /_/  >|  | \___ \  |  | |  |  /\___ \ 
+    |____|   |__|  |__/____  >__|_|  /\___  >___  / |__|/____  > |__| |____//____  >
+                           \/      \/     \/_____/           \/                  \/ 
+```
+
 > *"As above, so below; as within, so without."* — The Emerald Tablet
 
 **A multi-oracle agentic orchestrator for AI-powered software development.**
@@ -180,6 +189,16 @@ Areas of interest:
 - Additional themes
 - Command templates for specific frameworks
 - Cross-platform improvements
+
+## Inspiration
+
+This project was inspired by [Cole Medin](https://www.youtube.com/@ColeMedin)'s excellent video on agentic coding workflows:
+
+📺 **[Watch the video that started it all](https://youtu.be/ttdWPDmBN_4)**
+
+Cole's concepts around PRD-first development, the Plan-Implement-Verify loop, modular rules architecture, and the "lessons learned" pattern form the philosophical foundation of this system. Trismegistus takes those ideas and wraps them in a multi-provider orchestration layer.
+
+If you find this tool useful, go subscribe to Cole's channel — he's doing fantastic work in the AI engineering space.
 
 ## Origin
 
