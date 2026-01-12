@@ -611,6 +611,9 @@ Be concise. Focus on reusable wisdom.
     Clear-Content $planPath
     Remove-Item ".claude/active/progress.txt" -ErrorAction SilentlyContinue
     
+    # Clean up Claude CLI temp files
+    Get-ChildItem -Filter "tmpclaude-*-cwd" -ErrorAction SilentlyContinue | Remove-Item -Force
+    
     Write-TrisMessage "COMPLETE" "The cycle is complete. Ready for the next Work."
 }
 
