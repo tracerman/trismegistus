@@ -111,13 +111,13 @@ function Get-OllamaConfig {
         name = "ollama"
         displayName = "Ollama (Local)"
         models = @(
-            @{ id = "llama3.2"; name = "Llama 3.2 (8B)"; default = $true }
-            @{ id = "llama3.2:70b"; name = "Llama 3.2 (70B)" }
+            @{ id = "llama4"; name = "Llama 4 (8B)"; default = $true }
+            @{ id = "llama4:70b"; name = "Llama 4 (70B)" }
             @{ id = "codellama"; name = "CodeLlama" }
-            @{ id = "mistral"; name = "Mistral 7B" }
-            @{ id = "mixtral"; name = "Mixtral 8x7B" }
-            @{ id = "deepseek-coder"; name = "DeepSeek Coder" }
-            @{ id = "qwen2.5-coder"; name = "Qwen 2.5 Coder" }
+            @{ id = "mistral"; name = "Mistral" }
+            @{ id = "mixtral"; name = "Mixtral" }
+            @{ id = "deepseek-coder-v3"; name = "DeepSeek Coder V3" }
+            @{ id = "qwen3-coder"; name = "Qwen 3 Coder" }
         )
         features = @{
             interactive = $true

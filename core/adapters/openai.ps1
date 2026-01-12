@@ -75,13 +75,13 @@ function Invoke-OpenAIOracle {
 function Get-OpenAIConfig {
     return @{
         name = "openai"
-        displayName = "OpenAI (GPT-4 / Codex)"
+        displayName = "OpenAI (GPT-5 / Codex)"
         models = @(
-            @{ id = "gpt-4o"; name = "GPT-4o"; default = $true }
-            @{ id = "gpt-4o-mini"; name = "GPT-4o Mini" }
-            @{ id = "gpt-4-turbo"; name = "GPT-4 Turbo" }
-            @{ id = "o1"; name = "o1 (Reasoning)" }
-            @{ id = "o1-mini"; name = "o1 Mini" }
+            @{ id = "gpt-5.2-codex"; name = "GPT-5.2 Codex"; default = $true }
+            @{ id = "gpt-5"; name = "GPT-5" }
+            @{ id = "gpt-4o"; name = "GPT-4o" }
+            @{ id = "o3"; name = "o3 (Reasoning)" }
+            @{ id = "o3-mini"; name = "o3 Mini" }
         )
         features = @{
             interactive = $true

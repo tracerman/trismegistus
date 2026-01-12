@@ -71,8 +71,9 @@ function Get-ClaudeConfig {
         name = "claude"
         displayName = "Claude (Anthropic)"
         models = @(
-            @{ id = "claude-sonnet-4-20250514"; name = "Claude Sonnet 4"; default = $true }
-            @{ id = "claude-opus-4-20250514"; name = "Claude Opus 4" }
+            @{ id = "claude-opus-4-5-20251101"; name = "Claude Opus 4.5"; default = $true }
+            @{ id = "claude-sonnet-4-5-20250929"; name = "Claude Sonnet 4.5" }
+            @{ id = "claude-haiku-4-5-20251001"; name = "Claude Haiku 4.5" }
         )
         features = @{
             interactive = $true

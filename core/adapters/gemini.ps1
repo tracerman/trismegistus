@@ -53,9 +53,9 @@ function Get-GeminiConfig {
         name = "gemini"
         displayName = "Gemini (Google)"
         models = @(
-            @{ id = "gemini-2.5-pro"; name = "Gemini 2.5 Pro"; default = $true }
-            @{ id = "gemini-2.5-flash"; name = "Gemini 2.5 Flash" }
-            @{ id = "gemini-2.0-flash"; name = "Gemini 2.0 Flash" }
+            @{ id = "gemini-3-pro"; name = "Gemini 3 Pro"; default = $true }
+            @{ id = "gemini-3-flash"; name = "Gemini 3 Flash" }
+            @{ id = "gemini-2.5-pro"; name = "Gemini 2.5 Pro" }
         )
         features = @{
             interactive = $true
@@ -64,7 +64,7 @@ function Get-GeminiConfig {
             fileAccess = $true
             mcp = $false
         }
-        installCommand = "npm install -g @anthropic-ai/gemini-cli"
+        installCommand = "npm install -g @google/gemini-cli"
         authCommand = "gemini auth"
     }
 }
