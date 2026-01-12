@@ -990,20 +990,36 @@ function ai-config {
     <#
     .SYNOPSIS
         View or modify configuration
-    .PARAMETER Set
-        Key to set (e.g., "default", "routing.ai-plan")
-    .PARAMETER Value
-        Value to set
+    .DESCRIPTION
+        Usage: ai-config                     - Show current config
+               ai-config set <key> <value>   - Set a config value
+    .EXAMPLE
+        ai-config set default gemini
+        ai-config set providers.gemini.enabled true
+        ai-config set routing.ai-plan claude
     #>
     param(
-        [string]$Set = "",
+        [Parameter(Position=0)]
+        [string]$Action = "",
+        [Parameter(Position=1)]
+        [string]$Key = "",
+        [Parameter(Position=2)]
         [string]$Value = ""
     )
     
-    if ($Set -and $Value) {
-        Set-TrisConfigValue -Key $Set -Value $Value
-    } else {
+    if ($Action -eq "set" -and $Key -and $Value) {
+        Set-TrisConfigValue -Key $Key -Value $Value
+    } elseif ($Action -eq "" -or $Action -eq "show") {
         Show-TrisConfig
+    } else {
+        Write-Host "Usage:" -ForegroundColor Yellow
+        Write-Host "  ai-config                      - Show current config"
+        Write-Host "  ai-config set <key> <value>    - Set a config value"
+        Write-Host ""
+        Write-Host "Examples:" -ForegroundColor Yellow
+        Write-Host "  ai-config set default gemini"
+        Write-Host "  ai-config set providers.gemini.enabled true"
+        Write-Host "  ai-config set routing.ai-plan claude"
     }
 }
 

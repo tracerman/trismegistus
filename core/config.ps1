@@ -113,7 +113,7 @@ function Set-TrisConfigValue {
     .SYNOPSIS
         Set a configuration value
     .PARAMETER Key
-        Configuration key (e.g., "default", "theme", "routing.ai-plan")
+        Configuration key (e.g., "default", "theme", "routing.ai-plan", "providers.gemini.enabled")
     .PARAMETER Value
         New value
     #>
@@ -126,24 +126,40 @@ function Set-TrisConfigValue {
     
     $config = Get-TrisConfig
     
-    # Handle nested keys (e.g., "routing.ai-plan")
+    # Convert string booleans to actual booleans
+    $typedValue = switch ($Value.ToLower()) {
+        "true"  { $true }
+        "false" { $false }
+        default { $Value }
+    }
+    
+    # Handle nested keys (e.g., "routing.ai-plan" or "providers.gemini.enabled")
     $parts = $Key -split '\.'
     
     if ($parts.Count -eq 1) {
         # Top-level key
-        $config[$Key] = $Value
+        $config[$Key] = $typedValue
     } elseif ($parts.Count -eq 2) {
-        # Nested key
+        # Two-level nested key (e.g., routing.ai-plan)
         if (!$config[$parts[0]]) {
             $config[$parts[0]] = @{}
         }
-        $config[$parts[0]][$parts[1]] = $Value
+        $config[$parts[0]][$parts[1]] = $typedValue
+    } elseif ($parts.Count -eq 3) {
+        # Three-level nested key (e.g., providers.gemini.enabled)
+        if (!$config[$parts[0]]) {
+            $config[$parts[0]] = @{}
+        }
+        if (!$config[$parts[0]][$parts[1]]) {
+            $config[$parts[0]][$parts[1]] = @{}
+        }
+        $config[$parts[0]][$parts[1]][$parts[2]] = $typedValue
     } else {
-        throw "Invalid key format. Use 'key' or 'parent.key'"
+        throw "Invalid key format. Use 'key', 'parent.key', or 'parent.child.key'"
     }
     
     Save-TrisConfig -Config $config
-    Write-TrisMessage "CONFIG" "Set $Key = $Value"
+    Write-TrisMessage "CONFIG" "Set $Key = $typedValue"
 }
 
 function Get-TrisConfigValue {
