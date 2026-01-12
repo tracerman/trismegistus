@@ -69,12 +69,10 @@ function Get-TrisConfig {
             "ai-debug"    = "auto"
         }
         providers = @{
-            claude = @{ enabled = $true; model = "claude-sonnet-4-20250514" }
-            gemini = @{ enabled = $false; model = "gemini-2.5-pro" }
-            ollama = @{ enabled = $false; model = "llama3.2" }
-            openai = @{ enabled = $false; model = "gpt-4o" }
-            llm    = @{ enabled = $false; model = "claude-3-opus" }
-            aichat = @{ enabled = $false; model = "claude" }
+            claude = @{ enabled = $true; model = "claude-opus-4-5-20251101" }
+            gemini = @{ enabled = $false; model = "gemini-3-pro" }
+            ollama = @{ enabled = $false; model = "llama4" }
+            openai = @{ enabled = $false; model = "gpt-5.2-codex" }
         }
         preferences = @{
             autoConfirmCommit = $false
