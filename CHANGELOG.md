@@ -5,6 +5,38 @@ All notable changes to Trismegistus will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-13
+
+### Changed
+
+- **Context Folder**: New projects now use `.tris/` instead of `.claude/`
+  - Existing `.claude/` folders auto-detected and used (backwards compatible)
+  - Per-project override via `.trisconfig` file
+  - More provider-agnostic naming for a multi-oracle tool
+
+### Fixed
+
+- **ai-config**: 3-level nested keys now work (`providers.gemini.enabled`)
+- **ai-config**: Boolean values properly converted (`"true"` → `$true`)
+- **ai-config**: Parameter naming conflict with "set" keyword resolved
+- **ai-finish**: Now cleans up `tmpclaude-*-cwd` temp files from Claude CLI
+
+### Added
+
+- `Get-ContextFolder` function for dynamic context folder detection
+- `Get-ContextPath` helper for building context file paths
+- `.trisconfig` support for per-project folder override
+- Documentation section on context folder configuration
+
+### Documentation
+
+- Updated all docs to reference `.tris/` as default
+- Added Context Folder section to CONFIGURATION.md
+- Updated README project structure diagram
+- Updated WORKFLOWS.md path references
+
+---
+
 ## [1.0.0] - 2025-01-12
 
 ### Added
@@ -40,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Adapter pattern for CLI providers
 - Modular theme system
-- Persistent project memory via `.claude/` directory
+- Persistent project memory via `.tris/` directory (or `.claude/` for legacy)
 - Template-based prompt engineering
 
 ---
