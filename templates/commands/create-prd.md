@@ -9,7 +9,7 @@ argument-hint: [output-filename]
 
 Write PRD to: `$ARGUMENTS` 
 
-Default: `.claude/active/prd.md`
+Default: `.tris/active/prd.md`
 
 ---
 

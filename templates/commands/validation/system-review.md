@@ -16,10 +16,10 @@ You're analyzing how well the plan-execute cycle worked to identify improvements
 
 ## Inputs Required
 
-1. **Plan Document:** `.claude/active/plan.md` or archived plan
-2. **Execution Report:** `.claude/reports/[feature]-report.md`
-3. **Current Rules:** `.claude/CLAUDE.md`
-4. **Current Lessons:** `.claude/memory/lessons.md`
+1. **Plan Document:** `.tris/active/plan.md` or archived plan
+2. **Execution Report:** `.tris/reports/[feature]-report.md`
+3. **Current Rules:** `.tris/CLAUDE.md`
+4. **Current Lessons:** `.tris/memory/lessons.md`
 
 ---
 
@@ -80,7 +80,7 @@ Based on patterns, suggest:
 
 ## Output Report
 
-**Path:** `.claude/reviews/system-review-[date].md`
+**Path:** `.tris/reviews/system-review-[date].md`
 
 ### Template
 

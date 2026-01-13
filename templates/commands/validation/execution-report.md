@@ -12,14 +12,14 @@ Document what was actually implemented vs what was planned, capture lessons lear
 
 ## Context
 
-**Plan File:** `.claude/active/plan.md`
-**Progress File:** `.claude/active/progress.txt` (if exists)
+**Plan File:** `.tris/active/plan.md`
+**Progress File:** `.tris/active/progress.txt` (if exists)
 
 ---
 
 ## Generate Report
 
-**Output Path:** `.claude/reports/[feature-name]-[date].md`
+**Output Path:** `.tris/reports/[feature-name]-[date].md`
 
 ### Report Template
 
@@ -122,7 +122,7 @@ Document what was actually implemented vs what was planned, capture lessons lear
 
 ### For lessons.md
 
-These should be added to `.claude/memory/lessons.md`:
+These should be added to `.tris/memory/lessons.md`:
 
 ```
 - [DATE] LESSON: [Specific, actionable lesson 1]

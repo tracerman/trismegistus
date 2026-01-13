@@ -9,7 +9,7 @@ argument-hint: [path-to-rca or issue-id]
 
 Read RCA document: `$ARGUMENTS`
 
-Or if issue ID provided, look for: `.claude/reference/rca/issue-$ARGUMENTS.md`
+Or if issue ID provided, look for: `.tris/reference/rca/issue-$ARGUMENTS.md`
 
 ---
 
@@ -141,7 +141,7 @@ If needed:
 
 ### 9. Prepare Commit
 
-Create `.claude/commit_msg.txt`:
+Create `.tris/commit_msg.txt`:
 
 ```
 fix(scope): [brief description of fix]
@@ -192,7 +192,7 @@ The `Fixes #[id]` line will auto-close the GitHub issue when merged.
 
 ### Ready for Commit
 
-Commit message prepared in `.claude/commit_msg.txt`
+Commit message prepared in `.tris/commit_msg.txt`
 
 Run: `ai-commit`
 ```

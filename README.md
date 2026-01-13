@@ -148,7 +148,7 @@ Configuration is stored in `~/.trismegistus/config.json`.
 When you run `ai-init` in a project, Trismegistus creates:
 
 ```
-.claude/
+.tris/                  # (or .claude/ for legacy projects)
 ├── CLAUDE.md           # Project rules & conventions
 ├── active/
 │   ├── prd.md          # Project requirements (your "north star")
@@ -160,6 +160,8 @@ When you run `ai-init` in a project, Trismegistus creates:
 ```
 
 The `lessons.md` pattern is particularly powerful: every time something goes wrong, you teach the AI not to repeat that mistake.
+
+**Backwards Compatibility:** Trismegistus automatically detects and uses existing `.claude/` folders, so projects built with Claude Code continue working seamlessly.
 
 ## Supported Providers
 
@@ -174,7 +176,7 @@ The `lessons.md` pattern is particularly powerful: every time something goes wro
 
 Trismegistus is built on three principles:
 
-1. **Stateful Memory** — Unlike chatbots that forget, the `.claude/` directory maintains project context indefinitely
+1. **Stateful Memory** — Unlike chatbots that forget, the `.tris/` directory maintains project context indefinitely
 
 2. **Reflexion Loop** — The `ai-verify` command forces the AI to critique its own plan, catching errors before code is written
 

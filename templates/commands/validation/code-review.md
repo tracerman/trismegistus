@@ -26,8 +26,8 @@ description: Hostile technical code review focused on bugs and quality
 ### Read Project Standards First
 
 ```
-.claude/CLAUDE.md          # Project rules and conventions
-.claude/memory/lessons.md  # Past mistakes to watch for
+.tris/CLAUDE.md          # Project rules and conventions
+.tris/memory/lessons.md  # Past mistakes to watch for
 README.md                  # Project overview
 ```
 
@@ -126,7 +126,7 @@ Before reporting an issue:
 
 ## Phase 4: Generate Report
 
-**Output Path**: `.claude/reviews/[descriptive-name].md`
+**Output Path**: `.tris/reviews/[descriptive-name].md`
 
 ### Report Format
 

@@ -115,7 +115,7 @@ git add -A
 git add [files]
 ```
 
-**Output the commit message to:** `.claude/commit_msg.txt`
+**Output the commit message to:** `.tris/commit_msg.txt`
 
 This file is read by `ai-commit` for automatic committing.
 

@@ -58,6 +58,56 @@ $script:TemplatePath = $env:TRIS_TEMPLATES ?? (Join-Path $script:TrisRoot "templ
 $script:Config = if (Get-Command Get-TrisConfig -ErrorAction SilentlyContinue) { Get-TrisConfig } else { @{} }
 
 # ============================================================================
+# CONTEXT FOLDER MANAGEMENT
+# ============================================================================
+
+function Get-ContextFolder {
+    <#
+    .SYNOPSIS
+        Get the context folder path for the current project
+    .DESCRIPTION
+        Priority: 
+        1. Project-level .trisconfig (explicit override)
+        2. Existing .tris/ folder
+        3. Existing .claude/ folder (backwards compat)
+        4. Default: .tris (new projects)
+    #>
+    
+    # Check for project-level config override
+    if (Test-Path ".trisconfig") {
+        try {
+            $projectConfig = Get-Content ".trisconfig" -Raw | ConvertFrom-Json
+            if ($projectConfig.contextFolder) {
+                return $projectConfig.contextFolder
+            }
+        } catch { }
+    }
+    
+    # Check for existing folders (backwards compat)
+    if (Test-Path ".tris") { return ".tris" }
+    if (Test-Path ".claude") { return ".claude" }
+    
+    # Default for new projects
+    return ".tris"
+}
+
+function Get-ContextPath {
+    <#
+    .SYNOPSIS
+        Get full path to a context file/folder
+    .PARAMETER SubPath
+        Relative path within context folder (e.g., "active/plan.md")
+    #>
+    param([string]$SubPath = "")
+    
+    $folder = Get-ContextFolder
+    if ($SubPath) {
+        return Join-Path $folder $SubPath
+    }
+    return $folder
+}
+
+# ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
 
@@ -82,7 +132,7 @@ function Get-SmartReferences {
     #>
     param([string]$Context = "")
     
-    $refPath = Join-Path ".claude" "reference"
+    $refPath = Join-Path (Get-ContextFolder) "reference"
     if (!(Test-Path $refPath)) { return "No reference documents available." }
     
     # Keyword mapping
@@ -139,13 +189,14 @@ function Get-CoreContext {
     .SYNOPSIS
         Load core context files (rules, PRD, lessons)
     #>
+    $ctx = Get-ContextFolder
     $context = @{}
     
     $files = @{
-        rules = ".claude/CLAUDE.md"
-        prd = ".claude/active/prd.md"
-        lessons = ".claude/memory/lessons.md"
-        plan = ".claude/active/plan.md"
+        rules = "$ctx/CLAUDE.md"
+        prd = "$ctx/active/prd.md"
+        lessons = "$ctx/memory/lessons.md"
+        plan = "$ctx/active/plan.md"
     }
     
     foreach ($key in $files.Keys) {
@@ -165,7 +216,8 @@ function Test-LessonsSize {
     .SYNOPSIS
         Check if lessons.md is getting too large
     #>
-    $lessonsPath = ".claude/memory/lessons.md"
+    $ctx = Get-ContextFolder
+    $lessonsPath = "$ctx/memory/lessons.md"
     $threshold = $script:Config.preferences.lessonsWarnThreshold ?? 100
     
     if (Test-Path $lessonsPath) {
@@ -187,14 +239,17 @@ function ai-init {
     #>
     Write-TrisMessage "INIT" "Initializing the Sacred Geometry..."
     
+    # Determine context folder (uses .tris for new, respects existing .claude)
+    $ctx = Get-ContextFolder
+    
     # Create directory structure
     $dirs = @(
-        ".claude/active",
-        ".claude/memory", 
-        ".claude/reference",
-        ".claude/commands",
-        ".claude/metrics",
-        ".claude/reviews"
+        "$ctx/active",
+        "$ctx/memory", 
+        "$ctx/reference",
+        "$ctx/commands",
+        "$ctx/metrics",
+        "$ctx/reviews"
     )
     
     foreach ($dir in $dirs) {
@@ -208,33 +263,33 @@ function ai-init {
         # Commands
         $cmdSrc = Join-Path $script:TemplatePath "commands"
         if (Test-Path $cmdSrc) {
-            Copy-Item -Recurse -Force "$cmdSrc\*" ".claude\commands\" -ErrorAction SilentlyContinue
+            Copy-Item -Recurse -Force "$cmdSrc\*" "$ctx\commands\" -ErrorAction SilentlyContinue
         }
         
         # Create default files if missing
-        if (!(Test-Path ".claude/active/prd.md")) {
+        if (!(Test-Path "$ctx/active/prd.md")) {
             $prdTemplate = Join-Path $script:TemplatePath "active" "prd-template.md"
             if (Test-Path $prdTemplate) {
-                Copy-Item $prdTemplate ".claude/active/prd.md"
+                Copy-Item $prdTemplate "$ctx/active/prd.md"
             } else {
                 "# Project Requirements`n`n## Goal`n`n[Define your project goal here]" | 
-                    Set-Content ".claude/active/prd.md" -Encoding UTF8
+                    Set-Content "$ctx/active/prd.md" -Encoding UTF8
             }
         }
         
-        if (!(Test-Path ".claude/memory/lessons.md")) {
+        if (!(Test-Path "$ctx/memory/lessons.md")) {
             $lessonsTemplate = Join-Path $script:TemplatePath "memory" "lessons.md"
             if (Test-Path $lessonsTemplate) {
-                Copy-Item $lessonsTemplate ".claude/memory/lessons.md"
+                Copy-Item $lessonsTemplate "$ctx/memory/lessons.md"
             } else {
                 "# Lessons Learned`n`n## Format`n- [DATE] LESSON: Description | CONTEXT: Where it applies" | 
-                    Set-Content ".claude/memory/lessons.md" -Encoding UTF8
+                    Set-Content "$ctx/memory/lessons.md" -Encoding UTF8
             }
         }
         
-        if (!(Test-Path ".claude/CLAUDE.md")) {
+        if (!(Test-Path "$ctx/CLAUDE.md")) {
             "# Project Rules`n`n## Stack`n- [Define your tech stack]`n`n## Conventions`n- [Define coding conventions]" | 
-                Set-Content ".claude/CLAUDE.md" -Encoding UTF8
+                Set-Content "$ctx/CLAUDE.md" -Encoding UTF8
         }
     }
     
@@ -242,7 +297,7 @@ function ai-init {
     ai-ignore
     
     Write-TrisMessage "COMPLETE" "Sacred space prepared. The Work may begin."
-    Write-TrisMessage "INFO" "Next: Edit .claude/CLAUDE.md and .claude/active/prd.md"
+    Write-TrisMessage "INFO" "Next: Edit $ctx/CLAUDE.md and $ctx/active/prd.md"
 }
 
 function ai-plan {
@@ -261,8 +316,11 @@ function ai-plan {
     
     Write-TrisMessage "DESIGN" "Consulting the Oracle..."
     
+    # Get context folder
+    $ctx = Get-ContextFolder
+    
     # Auto-init if needed
-    if (!(Test-Path ".claude/active/prd.md")) { ai-init }
+    if (!(Test-Path "$ctx/active/prd.md")) { ai-init }
     
     # Check lessons size
     Test-LessonsSize
@@ -274,7 +332,7 @@ function ai-plan {
     $history = Get-RecentHistory -Lines 50
     
     # Load planning template
-    $templatePath = ".claude/commands/core/plan-feature.md"
+    $templatePath = "$ctx/commands/core/plan-feature.md"
     if (!(Test-Path $templatePath)) {
         $templatePath = Join-Path $script:TemplatePath "commands" "core" "plan-feature.md"
     }
@@ -321,7 +379,7 @@ INSTRUCTIONS:
 1. PHASE 1: ANALYSIS - Map dependencies and required changes.
 2. PHASE 2: DRAFT - Create mental draft of execution plan.
 3. PHASE 3: HOSTILE CRITIQUE - Attack your own draft. Ask: "Where will this break?"
-4. PHASE 4: OUTPUT - Generate the corrected plan to '.claude/active/plan.md'.
+4. PHASE 4: OUTPUT - Generate the corrected plan to '$ctx/active/plan.md'.
 
 STRICT CONSTRAINT: Do NOT implement code yet. ONLY create the plan.md file.
 "@
@@ -333,10 +391,10 @@ STRICT CONSTRAINT: Do NOT implement code yet. ONLY create the plan.md file.
     Invoke-Oracle -Prompt $prompt -CommandName "ai-plan" -Provider $Provider -Interactive
     
     # Open plan for review
-    if (Test-Path ".claude/active/plan.md") {
+    if (Test-Path "$ctx/active/plan.md") {
         Write-TrisMessage "REVEAL" "The plan has been revealed."
         if (Get-Command code -ErrorAction SilentlyContinue) {
-            code ".claude/active/plan.md"
+            code "$ctx/active/plan.md"
         }
     }
 }
@@ -357,7 +415,8 @@ function ai-exec {
     
     Write-TrisMessage "FORGE" "Preparing to transmute code..."
     
-    $planPath = ".claude/active/plan.md"
+    $ctx = Get-ContextFolder
+    $planPath = "$ctx/active/plan.md"
     if (!(Test-Path $planPath)) {
         Write-TrisMessage "VOID" "No plan found. Run 'ai-plan' first."
         return
@@ -373,13 +432,13 @@ function ai-exec {
     $context = Get-CoreContext
     
     # Load execution template
-    $templatePath = ".claude/commands/core/execute.md"
+    $templatePath = "$ctx/commands/core/execute.md"
     if (!(Test-Path $templatePath)) {
         $templatePath = Join-Path $script:TemplatePath "commands" "core" "execute.md"
     }
     
     # Check for resume
-    $progressPath = ".claude/active/progress.txt"
+    $progressPath = "$ctx/active/progress.txt"
     $resumeContext = ""
     if ($Resume -and (Test-Path $progressPath)) {
         $resumeContext = "`nRESUME FROM CHECKPOINT:`n" + (Get-Content $progressPath -Raw)
@@ -406,11 +465,11 @@ EXECUTION PROTOCOL:
 1. Read files BEFORE editing - verify content exists
 2. Execute plan SEQUENTIALLY - one step at a time  
 3. VALIDATE after each change
-4. TRACK progress in '.claude/active/progress.txt'
+4. TRACK progress in '$ctx/active/progress.txt'
 5. UPDATE CHANGELOG.md with changes
 
 CRITICAL - COMMIT MESSAGE:
-When finished, you MUST create a file at '.claude/commit_msg.txt' containing
+When finished, you MUST create a file at '$ctx/commit_msg.txt' containing
 a single-line Conventional Commit message (e.g., 'feat: add user authentication').
 This file is REQUIRED for the commit process.
 "@
@@ -428,14 +487,15 @@ function ai-verify {
     #>
     Write-TrisMessage "JUDGE" "Summoning the Hostile Critic..."
     
-    $planPath = ".claude/active/plan.md"
+    $ctx = Get-ContextFolder
+    $planPath = "$ctx/active/plan.md"
     if (!(Test-Path $planPath)) {
         Write-TrisMessage "VOID" "No plan to verify."
         return
     }
     
     $plan = Get-Content $planPath -Raw
-    $lessons = Get-Content ".claude/memory/lessons.md" -Raw -ErrorAction SilentlyContinue
+    $lessons = Get-Content "$ctx/memory/lessons.md" -Raw -ErrorAction SilentlyContinue
     
     $prompt = @"
 TASK: HOSTILE CRITIQUE & REFLEXION
@@ -452,7 +512,7 @@ INSTRUCTIONS:
 1. Find EVERY flaw: race conditions, missing error handling, security holes, hallucinated files
 2. Check against LESSONS - are we repeating past mistakes?
 3. DECISION:
-   - If flawed: REWRITE the plan and save to '.claude/active/plan.md'
+   - If flawed: REWRITE the plan and save to '$ctx/active/plan.md'
    - If solid: Output "STATUS: APPROVED" and explain why it passes
 
 Be ruthless. Better to catch issues now than in production.
@@ -482,6 +542,8 @@ function ai-commit {
     )
     
     Write-TrisMessage "COMMIT" "Preparing to seal the changes..."
+    
+    $ctx = Get-ContextFolder
     
     # Stage files
     git add .
@@ -517,7 +579,7 @@ function ai-commit {
     }
     
     # Get commit message
-    $msgFile = ".claude/commit_msg.txt"
+    $msgFile = "$ctx/commit_msg.txt"
     
     if (Test-Path $msgFile) {
         $msg = (Get-Content $msgFile -Raw).Trim()
@@ -550,7 +612,7 @@ function ai-commit {
         }
         
         # Record metric
-        $metricsPath = ".claude/metrics/metrics.jsonl"
+        $metricsPath = "$ctx/metrics/metrics.jsonl"
         if (Test-Path (Split-Path $metricsPath -Parent)) {
             @{
                 timestamp = (Get-Date -Format "o")
@@ -569,7 +631,8 @@ function ai-finish {
     #>
     Write-TrisMessage "SEAL" "Completing the Great Work..."
     
-    $planPath = ".claude/active/plan.md"
+    $ctx = Get-ContextFolder
+    $planPath = "$ctx/active/plan.md"
     if (!(Test-Path $planPath)) {
         Write-TrisMessage "VOID" "No active plan to finish."
         return
@@ -579,7 +642,7 @@ function ai-finish {
     $date = Get-Date -Format "yyyy-MM-dd"
     
     # Archive to completed log
-    $logPath = ".claude/memory/completed_log.md"
+    $logPath = "$ctx/memory/completed_log.md"
     if (!(Test-Path $logPath)) {
         "# Completed Missions Archive" | Set-Content $logPath -Encoding UTF8
     }
@@ -599,7 +662,7 @@ INSTRUCTIONS:
 1. Analyze what was accomplished
 2. Extract 1-2 key lessons learned
 3. Format as: "- [DATE] LESSON: [Description] | CONTEXT: [Where it applies]"
-4. APPEND these lessons to '.claude/memory/lessons.md'
+4. APPEND these lessons to '$ctx/memory/lessons.md'
 
 Be concise. Focus on reusable wisdom.
 "@
@@ -609,7 +672,7 @@ Be concise. Focus on reusable wisdom.
     
     # Clear active plan
     Clear-Content $planPath
-    Remove-Item ".claude/active/progress.txt" -ErrorAction SilentlyContinue
+    Remove-Item "$ctx/active/progress.txt" -ErrorAction SilentlyContinue
     
     # Clean up Claude CLI temp files
     Get-ChildItem -Filter "tmpclaude-*-cwd" -ErrorAction SilentlyContinue | Remove-Item -Force
@@ -632,6 +695,8 @@ function ai-architect {
     
     Write-TrisMessage "VISION" "Invoking the Council of Three..."
     
+    $ctx = Get-ContextFolder
+    
     $prompt = @"
 TASK: TREE OF THOUGHTS - ARCHITECTURAL COUNCIL
 
@@ -646,7 +711,7 @@ PROCESS:
 1. Each architect proposes their approach (3 distinct solutions)
 2. DEBATE: Cross-examine each approach for weaknesses
 3. SYNTHESIS: Merge the best elements into a final design
-4. OUTPUT: Save to '.claude/reference/architecture_decision.md'
+4. OUTPUT: Save to '$ctx/reference/architecture_decision.md'
 
 Include diagrams (ASCII or Mermaid) where helpful.
 "@
@@ -668,6 +733,7 @@ function ai-hotfix {
     
     Write-TrisMessage "FORGE" "Emergency transmutation initiated!"
     
+    $ctx = Get-ContextFolder
     $context = Get-CoreContext
     $map = Get-ProjectMap -MaxFiles 1000
     
@@ -690,7 +756,7 @@ INSTRUCTIONS:
 2. Make the fix directly - no lengthy planning
 3. Verify the fix works
 4. Update CHANGELOG.md
-5. Write commit message to '.claude/commit_msg.txt'
+5. Write commit message to '$ctx/commit_msg.txt'
 
 This is an emergency. Be surgical and precise.
 "@
@@ -765,6 +831,7 @@ function ai-debug {
     #>
     Write-TrisMessage "TRANSMUTE" "Analyzing the disturbance..."
     
+    $ctx = Get-ContextFolder
     $error = Get-Clipboard
     $map = Get-ProjectMap -MaxFiles 1000
     $context = Get-CoreContext
@@ -784,7 +851,7 @@ $($context.lessons)
 INSTRUCTIONS:
 1. Analyze the error deeply
 2. Identify root cause
-3. Create a fix plan in '.claude/active/plan.md'
+3. Create a fix plan in '$ctx/active/plan.md'
 4. Include validation steps
 "@
 
@@ -801,10 +868,11 @@ function ai-evolve {
     #>
     param([Parameter(Mandatory)][string]$Lesson)
     
+    $ctx = Get-ContextFolder
     $date = Get-Date -Format "yyyy-MM-dd"
     $entry = "- [$date] LESSON: $Lesson"
     
-    $lessonsPath = ".claude/memory/lessons.md"
+    $lessonsPath = "$ctx/memory/lessons.md"
     if (!(Test-Path $lessonsPath)) {
         "# Lessons Learned`n" | Set-Content $lessonsPath -Encoding UTF8
     }
@@ -820,8 +888,10 @@ function ai-status {
     #>
     Write-TrisBanner -Mini
     
+    $ctx = Get-ContextFolder
+    
     # Active plan
-    $planPath = ".claude/active/plan.md"
+    $planPath = "$ctx/active/plan.md"
     if (Test-Path $planPath) {
         $planLines = (Get-Content $planPath).Count
         Write-TrisMessage "STATUS" "Active Plan: $planLines lines"
@@ -833,13 +903,13 @@ function ai-status {
     Write-Host ""
     
     # Progress
-    $progressPath = ".claude/active/progress.txt"
+    $progressPath = "$ctx/active/progress.txt"
     if (Test-Path $progressPath) {
         Write-TrisMessage "STATUS" "Progress checkpoint exists"
     }
     
     # Lessons count
-    $lessonsPath = ".claude/memory/lessons.md"
+    $lessonsPath = "$ctx/memory/lessons.md"
     if (Test-Path $lessonsPath) {
         $lessonCount = (Get-Content $lessonsPath | Where-Object { $_ -match "^\s*-" }).Count
         Write-TrisMessage "MEMORY" "Lessons recorded: $lessonCount"
@@ -851,8 +921,8 @@ function ai-status {
     git status --short | ForEach-Object { Write-Host "    $_" -ForegroundColor Gray }
     
     # Pending commit message
-    if (Test-Path ".claude/commit_msg.txt") {
-        $msg = Get-Content ".claude/commit_msg.txt" -Raw
+    if (Test-Path "$ctx/commit_msg.txt") {
+        $msg = Get-Content "$ctx/commit_msg.txt" -Raw
         Write-Host ""
         Write-TrisMessage "COMMIT" "Pending commit: $($msg.Trim())"
     }
@@ -912,9 +982,16 @@ function ai-ignore {
     .SYNOPSIS
         Update .gitignore for Trismegistus
     #>
+    $ctx = Get-ContextFolder
     $rules = @"
 
 # --- TRISMEGISTUS ---
+$ctx/active/
+$ctx/metrics/
+$ctx/commit_msg.txt
+.tris/active/
+.tris/metrics/
+.tris/commit_msg.txt
 .claude/active/
 .claude/metrics/
 .claude/commit_msg.txt
@@ -939,7 +1016,8 @@ function ai-compress {
     #>
     Write-TrisMessage "TRANSMUTE" "Compressing the wisdom..."
     
-    $lessons = Get-Content ".claude/memory/lessons.md" -Raw -ErrorAction SilentlyContinue
+    $ctx = Get-ContextFolder
+    $lessons = Get-Content "$ctx/memory/lessons.md" -Raw -ErrorAction SilentlyContinue
     
     $prompt = @"
 TASK: MEMORY COMPRESSION
@@ -951,7 +1029,7 @@ INSTRUCTIONS:
 1. Identify duplicate or overlapping lessons
 2. Consolidate similar lessons into more general rules
 3. Remove outdated or superseded lessons
-4. OVERWRITE '.claude/memory/lessons.md' with compressed version
+4. OVERWRITE '$ctx/memory/lessons.md' with compressed version
 5. Preserve the most important, unique wisdom
 "@
 
@@ -964,12 +1042,13 @@ function ai-wipe {
     .SYNOPSIS
         Clear the active plan
     #>
-    if (Test-Path ".claude/active/plan.md") {
-        Clear-Content ".claude/active/plan.md"
+    $ctx = Get-ContextFolder
+    if (Test-Path "$ctx/active/plan.md") {
+        Clear-Content "$ctx/active/plan.md"
         Write-TrisMessage "VOID" "Active plan cleared."
     }
-    if (Test-Path ".claude/active/progress.txt") {
-        Remove-Item ".claude/active/progress.txt"
+    if (Test-Path "$ctx/active/progress.txt") {
+        Remove-Item "$ctx/active/progress.txt"
         Write-TrisMessage "VOID" "Progress cleared."
     }
 }

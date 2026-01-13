@@ -57,7 +57,7 @@ cat tsconfig.json mypy.ini pyrightconfig.json 2>/dev/null | head -30
 
 ## Phase 2: Generate CLAUDE.md
 
-**Output Path:** `.claude/CLAUDE.md`
+**Output Path:** `.tris/CLAUDE.md`
 
 ### Template
 

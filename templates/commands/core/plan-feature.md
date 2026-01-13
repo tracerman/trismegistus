@@ -60,7 +60,7 @@ Ask the user:
 
 ### 2.2 Pattern Recognition
 
-**Critical: Read `.claude/CLAUDE.md` first for project-specific rules.**
+**Critical: Read `.tris/CLAUDE.md` first for project-specific rules.**
 
 Then identify:
 - Naming conventions (files, functions, variables, components)
@@ -85,7 +85,7 @@ Search the codebase for:
 - What external libraries are relevant?
 - How are they configured/integrated?
 - Are there version constraints?
-- Check `ai_docs/`, `docs/`, or `.claude/reference/` for internal documentation
+- Check `ai_docs/`, `docs/`, or `.tris/reference/` for internal documentation
 
 ---
 
@@ -124,7 +124,7 @@ Document any choices made:
 
 ## Phase 5: Plan Output
 
-**Output Path**: `.claude/active/plan.md`
+**Output Path**: `.tris/active/plan.md`
 
 ### Required Plan Structure
 
@@ -275,6 +275,6 @@ Before saving the plan, verify:
 ## Output Confirmation
 
 After creating the plan:
-1. Confirm file saved to `.claude/active/plan.md`
+1. Confirm file saved to `.tris/active/plan.md`
 2. State confidence level (1-10) for one-pass execution success
 3. Flag any areas of uncertainty for user review

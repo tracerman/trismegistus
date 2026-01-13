@@ -263,7 +263,7 @@ This file is injected into every prompt for that project.
 
 ### PRD (prd.md)
 
-Your project requirements document in `.claude/active/prd.md`:
+Your project requirements document in `.tris/active/prd.md` (or `.claude/active/prd.md` for legacy projects):
 
 ```markdown
 # Project: Chrome Extension
@@ -280,6 +280,56 @@ Build a Chrome extension that replaces images with cats.
 - Manifest V3
 - TypeScript
 - React for popup
+```
+
+---
+
+## Context Folder
+
+Trismegistus stores project-specific context (plans, lessons, rules) in a folder.
+
+### Default Behavior
+
+- **New projects**: Uses `.tris/` folder
+- **Legacy projects**: Automatically detects and uses existing `.claude/` folder
+
+### Priority Order
+
+1. Project-level `.trisconfig` file (explicit override)
+2. Existing `.tris/` folder
+3. Existing `.claude/` folder (backwards compat)
+4. Default: `.tris/` (new projects)
+
+### Per-Project Override
+
+For legacy projects or specific requirements, create a `.trisconfig` file in your project root:
+
+```json
+{
+    "contextFolder": ".claude"
+}
+```
+
+This is useful for:
+- Projects already using `.claude/` that you don't want to migrate
+- Teams with existing `.claude/` conventions
+- Gradual migration strategies
+
+### Context Folder Structure
+
+```
+.tris/                  # or .claude/
+├── CLAUDE.md           # Project rules (tech stack, conventions)
+├── active/
+│   ├── plan.md         # Current execution plan
+│   ├── prd.md          # Project Requirements Document
+│   └── progress.txt    # Execution checkpoint
+├── memory/
+│   ├── lessons.md      # Learned wisdom
+│   └── completed_log.md
+├── reference/          # API docs, architecture decisions
+├── commands/           # Custom prompt templates
+└── metrics/            # Usage tracking
 ```
 
 ---

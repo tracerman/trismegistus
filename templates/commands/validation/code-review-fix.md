@@ -114,7 +114,7 @@ git add .
 git commit --amend
 
 # If new commit
-# Update .claude/commit_msg.txt
+# Update .tris/commit_msg.txt
 fix: address code review feedback
 
 - Fix [issue 1]

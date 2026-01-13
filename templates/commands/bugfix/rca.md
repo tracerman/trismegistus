@@ -15,7 +15,7 @@ argument-hint: [issue-description or github-issue-id]
 
 **Before investigating, search for similar past issues.**
 
-Read `.claude/memory/lessons.md` and look for:
+Read `.tris/memory/lessons.md` and look for:
 - Similar error patterns
 - Related components
 - Past fixes that might apply
@@ -146,7 +146,7 @@ grep -r "related_term" .
 
 ### Output Path
 
-Save to: `.claude/reference/rca/issue-[id-or-name].md`
+Save to: `.tris/reference/rca/issue-[id-or-name].md`
 
 ### RCA Document Format
 

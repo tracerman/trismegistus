@@ -32,13 +32,13 @@ Get-ChildItem -Recurse -Depth 3 -Name | Where-Object { $_ -notmatch 'node_module
 
 **Project Constitution (CRITICAL):**
 ```
-.claude/CLAUDE.md
+.tris/CLAUDE.md
 ```
 This contains all project rules, conventions, and constraints.
 
 **Accumulated Wisdom:**
 ```
-.claude/memory/lessons.md
+.tris/memory/lessons.md
 ```
 This contains lessons learned from past mistakes. **Do not repeat these errors.**
 
@@ -49,7 +49,7 @@ README.md
 
 **Recent Mission Log (last 20 entries):**
 ```
-.claude/memory/completed_log.md
+.tris/memory/completed_log.md
 ```
 
 ### 3. Identify Tech Stack

@@ -7,7 +7,7 @@ argument-hint: [path-to-plan]
 
 ## Plan Location
 
-Read and execute: `.claude/active/plan.md`
+Read and execute: `.tris/active/plan.md`
 
 (Or if specified: `$ARGUMENTS`)
 
@@ -75,7 +75,7 @@ Document unexpected issues for post-mortem.
 
 ### Rule 5: TRACK PROGRESS
 
-After completing each major step, append to `.claude/active/progress.txt`:
+After completing each major step, append to `.tris/active/progress.txt`:
 
 ```
 [2025-01-15 14:32] ✓ Completed: Step 1 - Created database model
@@ -95,7 +95,7 @@ This enables:
 
 ### 1. Load the Plan
 
-Read `.claude/active/plan.md` completely.
+Read `.tris/active/plan.md` completely.
 
 Identify:
 - Total number of steps
@@ -169,7 +169,7 @@ pytest tests/integration   # Integration tests
 
 **This step is MANDATORY. Do NOT skip.**
 
-Create file `.claude/commit_msg.txt` containing a single-line conventional commit message:
+Create file `.tris/commit_msg.txt` containing a single-line conventional commit message:
 
 ```
 type(scope): concise description

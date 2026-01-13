@@ -62,7 +62,7 @@ ai-commit
 
 ### What Happens
 
-1. **ai-plan** reads your project context (PRD, rules, lessons, file structure) and creates a step-by-step plan in `.claude/active/plan.md`
+1. **ai-plan** reads your project context (PRD, rules, lessons, file structure) and creates a step-by-step plan in `.tris/active/plan.md`
 
 2. **ai-exec** reads the plan and implements it, modifying your actual source files
 
@@ -79,7 +79,7 @@ ai-commit
 - **Review the plan before executing:**
   ```powershell
   ai-plan "Add authentication"
-  code .claude/active/plan.md  # Review it
+  code .tris/active/plan.md  # Review it
   ai-exec                       # Then execute
   ```
 
@@ -103,7 +103,7 @@ When you don't know *how* to build something, use the full pipeline.
 ai-architect "Design a plugin system that supports YouTube, Twitch, and future platforms"
 
 # 2. Review the architecture decision
-code .claude/reference/architecture_decision.md
+code .tris/reference/architecture_decision.md
 
 # 3. Create implementation plan based on architecture
 ai-plan "Implement plugin system based on architecture_decision.md"
@@ -125,7 +125,7 @@ ai-commit
 - Engineer 2: Scalability-focused approach  
 - Engineer 3: Security-focused approach
 
-They debate trade-offs and converge on the best solution, saved to `.claude/reference/architecture_decision.md`.
+They debate trade-offs and converge on the best solution, saved to `.tris/reference/architecture_decision.md`.
 
 **ai-verify** acts as a hostile code reviewer:
 - Looks for logic gaps
@@ -192,7 +192,7 @@ The `lessons.md` file is Trismegistus's long-term memory. It's injected into eve
 ### How It Works
 
 ```
-.claude/memory/lessons.md
+.tris/memory/lessons.md
 ```
 
 Every rule here is seen by the AI on every command. It literally cannot forget these lessons.
@@ -257,7 +257,7 @@ git init
 ai-init
 
 # Define your stack in the rules file
-code .claude/CLAUDE.md
+code .tris/CLAUDE.md
 
 # Launch with a description - AI researches and creates initial plan
 ai-launch "A Chrome extension that replaces all images with cats"
@@ -272,17 +272,17 @@ cd my-existing-project
 ai-init
 
 # CRITICAL: Teach it about your codebase
-# Update .claude/CLAUDE.md with your actual stack
+# Update .tris/CLAUDE.md with your actual stack
 
 # Run a discovery audit
 ai-plan "AUDIT: Analyze the existing file structure. Create a high-level map. Update prd.md with current state."
 ai-exec
 ```
 
-### The .claude/ Structure
+### The .tris/ Structure
 
 ```
-.claude/
+.tris/                     # (or .claude/ for legacy projects)
 ├── CLAUDE.md              # Rules: tech stack, style guide, forbidden patterns
 ├── active/
 │   ├── prd.md             # Your "north star" - what you're building
@@ -293,6 +293,8 @@ ai-exec
 ├── reference/             # API docs, architecture decisions
 └── commands/              # Custom command templates
 ```
+
+> **Note:** Trismegistus automatically detects existing `.claude/` folders for backwards compatibility with Claude Code projects.
 
 ---
 
