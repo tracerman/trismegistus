@@ -15,7 +15,7 @@ $script:TrisTheme = @{
      ██║   ██╔══██╗██║╚════██║██║╚██╔╝██║██╔══╝  ██║   ██║██║╚════██║   ██║   ██║   ██║╚════██║
      ██║   ██║  ██║██║███████║██║ ╚═╝ ██║███████╗╚██████╔╝██║███████║   ██║   ╚██████╔╝███████║
      ╚═╝   ╚═╝  ╚═╝╚═╝╚══════╝╚═╝     ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚══════╝
-                                                                                        v1.1.0
+                                                                                        v1.2.1
 "@
 
     # Alchemical Sigil for operations
@@ -641,23 +641,8 @@ function Show-TrisThinking {
     [Console]::CursorVisible = $true
 }
 
-function Show-TrisConfig {
-    $config = $script:TrisConfig
-    if (!$config) { return }
-    
-    Write-Host ""
-    Write-Host "  ╔════════════════════════════════════════════════════════╗" -ForegroundColor DarkCyan
-    Write-Host "  ║  ⚙️  TRISMEGISTUS CONFIGURATION                        ║" -ForegroundColor Cyan
-    Write-Host "  ╠════════════════════════════════════════════════════════╣" -ForegroundColor DarkCyan
-    Write-Host "  ║  Default Provider: " -NoNewline -ForegroundColor DarkCyan
-    Write-Host "$($config.default ?? 'claude')" -NoNewline -ForegroundColor Yellow
-    Write-Host "                             ║" -ForegroundColor DarkCyan
-    Write-Host "  ║  Theme: " -NoNewline -ForegroundColor DarkCyan
-    Write-Host "hermetic" -NoNewline -ForegroundColor Magenta
-    Write-Host "                                        ║" -ForegroundColor DarkCyan
-    Write-Host "  ╚════════════════════════════════════════════════════════╝" -ForegroundColor DarkCyan
-    Write-Host ""
-}
+# Note: Show-TrisConfig is defined in config.ps1 with full details
+# This space intentionally left for the full implementation
 
 function Show-TrisStats {
     param([hashtable]$Stats)
@@ -681,20 +666,58 @@ function Show-TrisStats {
 
 function Show-TrisWelcome {
     if (!(Test-UnicodeSupport)) {
-        Write-Host "  Trismegistus v1.1.0 - 'ai-help' for commands" -ForegroundColor Magenta
+        Write-Host "  Trismegistus v1.2.1 - 'ai-help' for commands" -ForegroundColor Magenta
         return
     }
     
+    [Console]::CursorVisible = $false
     Write-Host ""
-    Write-Host "  ⚗️ ════════════════════════════════════════════════════════ ⚗️" -ForegroundColor DarkMagenta
-    Write-Host "     T R I S M E G I S T U S  v1.1.0" -ForegroundColor Magenta
-    Write-Host "     Thrice-Great AI Orchestrator" -ForegroundColor DarkMagenta  
-    Write-Host "  ⚗️ ════════════════════════════════════════════════════════ ⚗️" -ForegroundColor DarkMagenta
+    
+    # Animated border reveal
+    $borderChar = "═"
+    $width = 56
+    Write-Host "  ⚗️ " -NoNewline -ForegroundColor DarkMagenta
+    for ($i = 0; $i -lt $width; $i++) {
+        Write-Host $borderChar -NoNewline -ForegroundColor DarkMagenta
+        Start-Sleep -Milliseconds 8
+    }
+    Write-Host " ⚗️" -ForegroundColor DarkMagenta
+    
+    # Typing effect for title
+    $title = "     T R I S M E G I S T U S  v1.2.1"
+    foreach ($char in $title.ToCharArray()) {
+        Write-Host $char -NoNewline -ForegroundColor Magenta
+        Start-Sleep -Milliseconds 15
+    }
     Write-Host ""
-    Write-Host "     Type " -NoNewline -ForegroundColor DarkGray
+    
+    # Subtitle with slight delay
+    Start-Sleep -Milliseconds 100
+    Write-Host "     Thrice-Great AI Orchestrator" -ForegroundColor DarkMagenta
+    
+    # Bottom border (faster)
+    Write-Host "  ⚗️ " -NoNewline -ForegroundColor DarkMagenta
+    for ($i = 0; $i -lt $width; $i++) {
+        Write-Host $borderChar -NoNewline -ForegroundColor DarkMagenta
+        Start-Sleep -Milliseconds 5
+    }
+    Write-Host " ⚗️" -ForegroundColor DarkMagenta
+    Write-Host ""
+    
+    # Shimmer effect on "ai-help" 
+    $shimmerColors = @("DarkCyan", "Cyan", "White", "Cyan", "DarkCyan")
+    foreach ($color in $shimmerColors) {
+        Write-Host "`r     Type " -NoNewline -ForegroundColor DarkGray
+        Write-Host "ai-help" -NoNewline -ForegroundColor $color
+        Write-Host " to see all 35 commands   " -NoNewline -ForegroundColor DarkGray
+        Start-Sleep -Milliseconds 80
+    }
+    Write-Host "`r     Type " -NoNewline -ForegroundColor DarkGray
     Write-Host "ai-help" -NoNewline -ForegroundColor Cyan
     Write-Host " to see all 35 commands" -ForegroundColor DarkGray
     Write-Host ""
+    
+    [Console]::CursorVisible = $true
     
     Write-TrisQuote -Context "Planning"
 }
@@ -829,7 +852,5 @@ function Write-TrisGradient {
 }
 
 # ============================================================================
-# EXPORT
+# END OF HERMETIC THEME
 # ============================================================================
-
-Export-ModuleMember -Variable TrisTheme -Function *

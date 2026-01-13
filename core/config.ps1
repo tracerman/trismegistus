@@ -203,32 +203,46 @@ function Show-TrisConfig {
     
     # General settings
     Write-Host "  General:" -ForegroundColor Yellow
-    Write-Host "    Default Provider: $($config.default)" -ForegroundColor Gray
-    Write-Host "    Theme:            $($config.theme)" -ForegroundColor Gray
+    Write-Host "    Default Provider: $($config.default ?? 'claude')" -ForegroundColor Gray
+    Write-Host "    Theme:            $($config.theme ?? 'hermetic')" -ForegroundColor Gray
     Write-Host ""
     
     # Providers
     Write-Host "  Providers:" -ForegroundColor Yellow
-    foreach ($p in $config.providers.GetEnumerator()) {
-        $status = if ($p.Value.enabled) { "Enabled " } else { "Disabled" }
-        $color = if ($p.Value.enabled) { "Green" } else { "DarkGray" }
-        $model = $p.Value.model
-        Write-Host "    $($p.Key.PadRight(10)) [$status] Model: $model" -ForegroundColor $color
+    if ($config.providers) {
+        foreach ($p in $config.providers.GetEnumerator()) {
+            $enabled = $p.Value.enabled -eq $true
+            $status = if ($enabled) { "Enabled " } else { "Disabled" }
+            $color = if ($enabled) { "Green" } else { "DarkGray" }
+            $model = $p.Value.model ?? "default"
+            Write-Host "    $($p.Key.PadRight(10)) [$status] Model: $model" -ForegroundColor $color
+        }
+    } else {
+        Write-Host "    (no providers configured)" -ForegroundColor DarkGray
     }
     Write-Host ""
     
     # Routing
     Write-Host "  Command Routing:" -ForegroundColor Yellow
-    foreach ($r in $config.routing.GetEnumerator()) {
-        Write-Host "    $($r.Key.PadRight(15)) → $($r.Value)" -ForegroundColor Gray
+    if ($config.routing) {
+        foreach ($r in $config.routing.GetEnumerator()) {
+            Write-Host "    $($r.Key.PadRight(15)) → $($r.Value)" -ForegroundColor Gray
+        }
+    } else {
+        Write-Host "    (using defaults)" -ForegroundColor DarkGray
     }
     Write-Host ""
     
     # Preferences
     Write-Host "  Preferences:" -ForegroundColor Yellow
-    Write-Host "    Protected Branches: $($config.preferences.protectedBranches -join ', ')" -ForegroundColor Gray
-    Write-Host "    Max Context Files:  $($config.preferences.maxContextFiles)" -ForegroundColor Gray
-    Write-Host "    Lessons Warn at:    $($config.preferences.lessonsWarnThreshold) lines" -ForegroundColor Gray
+    if ($config.preferences) {
+        $branches = if ($config.preferences.protectedBranches) { $config.preferences.protectedBranches -join ', ' } else { "main, master" }
+        Write-Host "    Protected Branches: $branches" -ForegroundColor Gray
+        Write-Host "    Max Context Files:  $($config.preferences.maxContextFiles ?? 3000)" -ForegroundColor Gray
+        Write-Host "    Lessons Warn at:    $($config.preferences.lessonsWarnThreshold ?? 100) lines" -ForegroundColor Gray
+    } else {
+        Write-Host "    (using defaults)" -ForegroundColor DarkGray
+    }
     Write-Host ""
     
     Write-Host "  Config File: $(Join-Path (Get-TrisConfigPath) 'config.json')" -ForegroundColor DarkGray

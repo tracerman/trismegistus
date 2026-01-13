@@ -2,7 +2,7 @@
 #  T R I S M E G I S T U S
 #  "Thrice-Great" - Multi-Oracle Agentic Orchestrator
 #  
-#  Version: 1.1.0
+#  Version: 1.2.1
 #  Author: Transmuted from Claude God Mode
 #  
 #  "As above, so below; as within, so without." - The Emerald Tablet
@@ -348,7 +348,7 @@ function ai-plan {
     # Construct the prompt
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Provider: $($Provider ?? $script:Config.default ?? "claude")
 - Capability: Deep Reasoning & Massive Context
 - OS: $($IsWindows ? "Windows" : ($IsMacOS ? "macOS" : "Linux"))
@@ -450,7 +450,7 @@ function ai-exec {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: EXECUTION
 - Provider: $($Provider ?? $script:Config.default ?? "claude")
 
@@ -1124,7 +1124,13 @@ function ai-progress {
     Write-TrisBanner -Mini
     Write-Host ""
     
-    $plan = Get-Content $planPath -Raw
+    $plan = Get-Content $planPath -Raw -ErrorAction SilentlyContinue
+    
+    # Handle empty or null plan
+    if ([string]::IsNullOrWhiteSpace($plan)) {
+        Write-TrisMessage "VOID" "Plan file is empty. Run 'ai-plan' to create one."
+        return
+    }
     
     # Extract phases
     $phasePattern = '(?m)^#{2,3}\s*(Phase\s*\d+[:\s\-]*[^\n]*)'
@@ -1301,7 +1307,7 @@ function ai-continue {
     # Build continuation prompt
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: CONTINUATION (Resuming interrupted work)
 - Target: Phase $targetPhase
 
@@ -1505,7 +1511,7 @@ function ai-test {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: TEST ANALYSIS
 - Framework: $framework
 
@@ -1584,7 +1590,7 @@ function ai-review {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: CODE REVIEW (Hostile Reviewer)
 
 PROJECT RULES:
@@ -1752,7 +1758,7 @@ function ai-explain {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: CODE EXPLANATION
 
 PROJECT CONTEXT:
@@ -1832,7 +1838,7 @@ function ai-docs {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: DOCUMENTATION GENERATION
 - Type: $Type
 
@@ -1920,7 +1926,7 @@ function ai-research {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1  
+- Orchestrator: Trismegistus v1.2.1  
 - Mode: DEEP RESEARCH
 - Topic: $Topic
 
@@ -2011,7 +2017,7 @@ function ai-estimate {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: COMPLEXITY ESTIMATION
 
 PROJECT STRUCTURE:
@@ -2098,7 +2104,7 @@ function ai-split {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: PLAN RESTRUCTURING
 $phaseHint
 
@@ -2186,7 +2192,7 @@ function ai-changelog {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.1
+- Orchestrator: Trismegistus v1.2.1
 - Mode: CHANGELOG GENERATION
 
 COMMITS SINCE $Since`:

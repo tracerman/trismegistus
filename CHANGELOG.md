@@ -5,6 +5,24 @@ All notable changes to Trismegistus will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-01-13
+
+### Fixed
+
+- **ai-progress**: No longer crashes on empty plan files (null safety)
+- **ai-config**: Now displays full configuration (providers, routing, preferences)
+- **Show-TrisConfig**: Removed duplicate function that was overriding full version
+- **Export-ModuleMember**: Removed (not valid in dot-sourced scripts)
+- **Show-TrisWelcome**: Fixed shimmer animation positioning
+
+### Changed
+
+- **Startup animation**: Border draws character-by-character, title types out
+- **"ai-help" shimmer**: Now cycles through DarkCyan → Cyan → White smoothly
+- **Null safety**: Added throughout config display functions
+
+---
+
 ## [1.1.0] - 2025-01-13
 
 ### Added - New Commands (13 total)
