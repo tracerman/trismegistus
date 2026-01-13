@@ -92,16 +92,65 @@ ai-config
 ### Set Routing
 
 ```powershell
+# Syntax
+ai-config set routing.<command-name> <provider>
+```
+
+### All Routable Commands
+
+| Command | Purpose | Recommended Provider |
+|---------|---------|---------------------|
+| **Planning Phase** | | |
+| `ai-plan` | Create execution plan | claude (complex) |
+| `ai-verify` | Hostile plan review | claude |
+| `ai-architect` | Tree of Thoughts design | claude |
+| `ai-estimate` | Complexity analysis | claude |
+| `ai-research` | Deep research | claude |
+| `ai-split` | Break plan into phases | ollama |
+| **Execution Phase** | | |
+| `ai-exec` | Execute the plan | claude |
+| `ai-continue` | Resume execution | claude |
+| `ai-progress` | View phase status | ollama (simple) |
+| `ai-debug` | Analyze errors | claude |
+| `ai-ask` | Quick consultation | ollama |
+| **Validation Phase** | | |
+| `ai-diff` | Show changes | ollama (simple) |
+| `ai-test` | Run & analyze tests | ollama |
+| `ai-review` | Code review | claude |
+| `ai-explain` | Explain code | claude |
+| `ai-context` | Debug AI context | ollama |
+| **Shipping Phase** | | |
+| `ai-commit` | Generate commit msg | ollama |
+| `ai-docs` | Generate documentation | claude |
+| `ai-changelog` | Generate changelog | ollama |
+| `ai-finish` | Archive & learn | claude |
+| `ai-ship` | Full pipeline | (uses other routes) |
+
+### Example Routing Configuration
+
+```powershell
 # Heavy reasoning tasks → best model
 ai-config set routing.ai-plan claude
 ai-config set routing.ai-architect claude
 ai-config set routing.ai-verify claude
 ai-config set routing.ai-exec claude
+ai-config set routing.ai-review claude
+ai-config set routing.ai-continue claude
+ai-config set routing.ai-explain claude
+ai-config set routing.ai-docs claude
+ai-config set routing.ai-estimate claude
+ai-config set routing.ai-research claude
 
 # Quick/cheap tasks → local or fast model
 ai-config set routing.ai-ask ollama
 ai-config set routing.ai-commit ollama
-ai-config set routing.ai-debug auto
+ai-config set routing.ai-debug ollama
+ai-config set routing.ai-diff ollama
+ai-config set routing.ai-test ollama
+ai-config set routing.ai-progress ollama
+ai-config set routing.ai-context ollama
+ai-config set routing.ai-split ollama
+ai-config set routing.ai-changelog ollama
 ```
 
 ### Auto Routing
@@ -112,28 +161,37 @@ Setting a route to `auto` uses the default provider, or falls back to the cheape
 ai-config set routing.ai-ask auto
 ```
 
-### Recommended Setup
+### Recommended Setups
 
-**If you have Claude + Ollama:**
+**Cost-Optimized (Claude + Ollama):**
 ```powershell
+# Complex tasks → Claude
 ai-config set routing.ai-plan claude
 ai-config set routing.ai-exec claude
 ai-config set routing.ai-verify claude
 ai-config set routing.ai-architect claude
-ai-config set routing.ai-ask ollama      # Free & fast
-ai-config set routing.ai-commit ollama   # Free & fast
-ai-config set routing.ai-debug ollama    # Free & fast
+ai-config set routing.ai-review claude
+ai-config set routing.ai-continue claude
+
+# Simple tasks → Ollama (free)
+ai-config set routing.ai-ask ollama
+ai-config set routing.ai-commit ollama
+ai-config set routing.ai-diff ollama
+ai-config set routing.ai-test ollama
+ai-config set routing.ai-progress ollama
+ai-config set routing.ai-context ollama
 ```
 
-**If you only have Claude:**
-```powershell
-# Leave everything at defaults - all routes to Claude
-```
-
-**If you prefer local-only (privacy):**
+**Privacy-First (Ollama Only):**
 ```powershell
 ai-config set default ollama
-# All commands will use Ollama
+# All commands will use Ollama (local, no data sent externally)
+```
+
+**Maximum Quality (Claude Only):**
+```powershell
+ai-config set default claude
+# All commands use Claude (best quality, higher cost)
 ```
 
 ---
@@ -209,9 +267,21 @@ Full `config.json` structure:
     "ai-exec": "claude",
     "ai-verify": "claude",
     "ai-architect": "claude",
+    "ai-review": "claude",
+    "ai-continue": "claude",
+    "ai-estimate": "claude",
+    "ai-research": "claude",
+    "ai-explain": "claude",
+    "ai-docs": "claude",
     "ai-commit": "ollama",
     "ai-ask": "ollama",
-    "ai-debug": "auto"
+    "ai-debug": "ollama",
+    "ai-diff": "ollama",
+    "ai-test": "ollama",
+    "ai-progress": "ollama",
+    "ai-context": "ollama",
+    "ai-split": "ollama",
+    "ai-changelog": "ollama"
   },
   "preferences": {
     "protectedBranches": ["main", "master", "production", "prod"],
@@ -238,7 +308,7 @@ Optional environment variables:
 
 ### CLAUDE.md
 
-Each project can have its own rules in `.claude/CLAUDE.md`:
+Each project can have its own rules in `.tris/CLAUDE.md`:
 
 ```markdown
 # Project Rules
@@ -327,7 +397,7 @@ This is useful for:
 ├── memory/
 │   ├── lessons.md      # Learned wisdom
 │   └── completed_log.md
-├── reference/          # API docs, architecture decisions
+├── reference/          # API docs, architecture decisions, research
 ├── commands/           # Custom prompt templates
 └── metrics/            # Usage tracking
 ```

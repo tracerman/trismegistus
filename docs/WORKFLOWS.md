@@ -12,9 +12,12 @@ This guide covers the day-to-day usage patterns that make Trismegistus effective
 2. [Workflow 1: Speed Run](#workflow-1-speed-run-90-of-tasks)
 3. [Workflow 2: Deep Architect](#workflow-2-deep-architect)
 4. [Workflow 3: Crisis Response](#workflow-3-crisis-response)
-5. [The Lessons Pattern](#the-lessons-pattern)
-6. [Project Initialization](#project-initialization)
-7. [Best Practices](#best-practices)
+5. [Workflow 4: Large Features](#workflow-4-large-features-with-phases)
+6. [Workflow 5: Ship with Confidence](#workflow-5-ship-with-confidence)
+7. [The Lessons Pattern](#the-lessons-pattern)
+8. [Project Initialization](#project-initialization)
+9. [Best Practices](#best-practices)
+10. [Command Quick Reference](#command-quick-reference)
 
 ---
 
@@ -23,20 +26,26 @@ This guide covers the day-to-day usage patterns that make Trismegistus effective
 Every task follows the **Plan → Implement → Verify** loop:
 
 ```
-┌─────────┐     ┌─────────────┐     ┌──────────┐
-│  PLAN   │────▶│  IMPLEMENT  │────▶│  VERIFY  │
-│         │     │             │     │          │
-│ ai-plan │     │   ai-exec   │     │ ai-verify│
-└─────────┘     └─────────────┘     └──────────┘
-      │                                   │
-      │         ┌─────────┐               │
-      └─────────│ LESSONS │◀──────────────┘
-                └─────────┘
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│    PLAN      │────▶│   EXECUTE    │────▶│   VALIDATE   │
+│              │     │              │     │              │
+│ ai-estimate  │     │   ai-exec    │     │   ai-diff    │
+│ ai-plan      │     │ ai-progress  │     │   ai-test    │
+│ ai-verify    │     │ ai-continue  │     │  ai-review   │
+└──────────────┘     └──────────────┘     └──────────────┘
+       │                                         │
+       │            ┌──────────────┐             │
+       └────────────│    SHIP      │◀────────────┘
+                    │              │
+                    │  ai-commit   │
+                    │  ai-finish   │
+                    └──────────────┘
 ```
 
 **Why this matters:**
 - Planning catches 80% of bugs before code is written
-- Verification catches mistakes the AI made during implementation
+- Progress tracking prevents context window degradation
+- Validation catches mistakes before they ship
 - Lessons prevent the same mistakes from happening again
 
 ---
@@ -80,7 +89,7 @@ ai-commit
   ```powershell
   ai-plan "Add authentication"
   code .tris/active/plan.md  # Review it
-  ai-exec                       # Then execute
+  ai-exec                     # Then execute
   ```
 
 - **For trivial changes, skip planning:**
@@ -99,26 +108,41 @@ When you don't know *how* to build something, use the full pipeline.
 ### The Commands
 
 ```powershell
-# 1. Architecture design (Tree of Thoughts)
+# 1. Estimate complexity first
+ai-estimate "Build a plugin system for multiple video platforms"
+
+# 2. Research if needed
+ai-research "Plugin architecture patterns"
+
+# 3. Architecture design (Tree of Thoughts)
 ai-architect "Design a plugin system that supports YouTube, Twitch, and future platforms"
 
-# 2. Review the architecture decision
+# 4. Review the architecture decision
 code .tris/reference/architecture_decision.md
 
-# 3. Create implementation plan based on architecture
+# 5. Create implementation plan based on architecture
 ai-plan "Implement plugin system based on architecture_decision.md"
 
-# 4. Hostile review of the plan
+# 6. Hostile review of the plan
 ai-verify
 
-# 5. Execute
+# 7. Execute
 ai-exec
 
-# 6. Commit
+# 8. Validate before committing
+ai-diff          # See what changed
+ai-review        # Code review the changes
+ai-test          # Run tests
+
+# 9. Ship
 ai-commit
 ```
 
 ### What Each Step Does
+
+**ai-estimate** analyzes complexity and recommends whether to proceed or split first.
+
+**ai-research** gathers information about unfamiliar tech and saves it to `.tris/reference/` for the AI to use during planning.
 
 **ai-architect** simulates three senior engineers debating:
 - Engineer 1: Minimalist approach
@@ -127,11 +151,9 @@ ai-commit
 
 They debate trade-offs and converge on the best solution, saved to `.tris/reference/architecture_decision.md`.
 
-**ai-verify** acts as a hostile code reviewer:
-- Looks for logic gaps
-- Identifies race conditions
-- Catches hallucinated imports/files
-- Rewrites the plan if flaws are found
+**ai-verify** acts as a hostile code reviewer, looking for logic gaps, race conditions, and hallucinations.
+
+**ai-review** reviews the *actual code changes* (not just the plan) for bugs and issues.
 
 ### When to Use This
 
@@ -159,16 +181,20 @@ ai-debug
 # 3. Execute the fix
 ai-exec
 
-# 4. Commit
+# 4. Run tests to verify
+ai-test
+
+# 5. Review and commit
+ai-diff
 ai-commit
 
-# 5. CRITICAL: Teach the system to prevent this forever
+# 6. CRITICAL: Teach the system to prevent this forever
 ai-evolve "When using React Query, always check if data is undefined before accessing properties"
 ```
 
 ### The Key Insight
 
-Step 5 is what separates good teams from great ones. After every bug fix, ask:
+Step 6 is what separates good teams from great ones. After every bug fix, ask:
 
 > "What rule would have prevented this?"
 
@@ -181,6 +207,122 @@ ai-evolve "Always use optional chaining (?.) when accessing nested API response 
 ai-evolve "Run 'npm test' before every commit in React projects"
 ai-evolve "Never use innerHTML - always use textContent to prevent XSS"
 ai-evolve "Check for null/undefined before array methods like .map() and .filter()"
+```
+
+---
+
+## Workflow 4: Large Features (with Phases)
+
+**Use for:** Multi-day features, epics, anything that might overflow context
+
+Large features need to be split into phases to prevent context window degradation.
+
+### The Commands
+
+```powershell
+# 1. Estimate to understand scope
+ai-estimate "Build user authentication with OAuth, JWT, and role-based access"
+
+# 2. Plan the full feature
+ai-plan "Implement user authentication system"
+
+# 3. If the plan is too large, split it
+ai-split -Phases 4
+
+# 4. Execute phase by phase
+ai-exec
+
+# 5. Check progress
+ai-progress
+
+# 6. When context degrades or you take a break, continue cleanly
+ai-continue
+
+# 7. Repeat until all phases complete
+ai-progress      # See what's left
+ai-continue      # Execute next phase
+
+# 8. Ship when done
+ai-ship
+```
+
+### Understanding ai-progress
+
+```powershell
+ai-progress
+```
+
+Shows you:
+- Overall completion percentage with progress bar
+- Each phase with status (complete ✓, in progress ◐, pending ○)
+- Task checkboxes within each phase
+- Last checkpoint timestamp
+
+### Understanding ai-continue
+
+```powershell
+# Auto-detect and continue next incomplete phase
+ai-continue
+
+# Or specify a specific phase
+ai-continue -Phase 3
+```
+
+This command:
+1. Analyzes what's already done
+2. Starts a fresh context (avoiding degradation)
+3. Focuses only on the next incomplete phase
+4. Doesn't re-do completed work
+
+### Why This Matters
+
+After many messages, AI agents get overwhelmed and repeat mistakes. Fresh starts = sharp focus. The `ai-continue` command is designed for this reality.
+
+---
+
+## Workflow 5: Ship with Confidence
+
+**Use for:** When you want a full quality gate before committing
+
+The `ai-ship` command runs the entire validation pipeline.
+
+### The Commands
+
+```powershell
+# One command does it all
+ai-ship
+
+# Or skip tests if you're confident
+ai-ship -SkipTests
+
+# Or skip all prompts
+ai-ship -Force
+```
+
+### What ai-ship Does
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║  SHIPPING PIPELINE                                            ║
+╠═══════════════════════════════════════════════════════════════╣
+║  Phase 1: ai-diff     → Show what changed                     ║
+║  Phase 2: ai-review   → Hostile code review                   ║
+║  Phase 3: ai-test     → Run tests, analyze failures           ║
+║  Phase 4: ai-commit   → Commit if all pass                    ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+Each phase is a gate. If something fails, the pipeline stops and you can fix it.
+
+### Manual Pipeline (Same Steps)
+
+If you prefer manual control:
+
+```powershell
+ai-diff              # What changed?
+ai-review            # Any issues?
+ai-test              # Tests pass?
+ai-commit            # Ship it
 ```
 
 ---
@@ -286,11 +428,12 @@ ai-exec
 ├── CLAUDE.md              # Rules: tech stack, style guide, forbidden patterns
 ├── active/
 │   ├── prd.md             # Your "north star" - what you're building
-│   └── plan.md            # Current mission (cleared after ai-finish)
+│   ├── plan.md            # Current mission (cleared after ai-finish)
+│   └── progress.txt       # Execution checkpoint tracking
 ├── memory/
 │   ├── lessons.md         # Accumulated wisdom
 │   └── completed_log.md   # Archive of finished missions
-├── reference/             # API docs, architecture decisions
+├── reference/             # API docs, architecture decisions, research
 └── commands/              # Custom command templates
 ```
 
@@ -300,20 +443,13 @@ ai-exec
 
 ## Best Practices
 
-### 1. One Prompt to Rule Them All
+### 1. Estimate Before Planning
 
-Don't split "update docs" and "write code" into two commands:
+For anything non-trivial:
 
 ```powershell
-# Bad - two separate operations
-ai-plan "Update the PRD with auth requirements"
-ai-exec
-ai-plan "Implement authentication"
-ai-exec
-
-# Good - combined
-ai-plan "UPDATE PRD & IMPLEMENT: Add JWT authentication to the API"
-ai-exec
+ai-estimate "Build the user dashboard"
+# If it says "EPIC" or "SPLIT FIRST", break it down
 ```
 
 ### 2. Trust the Verify Loop
@@ -328,29 +464,51 @@ ai-exec
 
 It costs seconds but saves hours of debugging.
 
-### 3. Feed the Brain
+### 3. Use Progress Tracking for Large Tasks
+
+```powershell
+ai-plan "Build authentication system"
+ai-split           # Break into phases
+ai-exec            # Start phase 1
+ai-progress        # Check status
+ai-continue        # Continue to phase 2
+```
+
+### 4. Validate Before Shipping
+
+```powershell
+# After execution, before committing:
+ai-diff            # What actually changed?
+ai-test            # Do tests pass?
+ai-review          # Any code issues?
+ai-commit          # Now ship it
+```
+
+Or use the all-in-one: `ai-ship`
+
+### 5. Debug Context Issues
+
+When the AI seems confused about your project:
+
+```powershell
+ai-context         # See what the AI actually sees
+ai-context -Full   # See complete content (not truncated)
+```
+
+### 6. Feed the Brain
 
 When you learn something, teach the system:
 
 ```powershell
-# You discovered Twitch changed their API
 ai-evolve "Twitch EventSub requires webhook verification since API v2"
-
-# You found a better pattern
 ai-evolve "Use Zod for runtime type validation at API boundaries"
 ```
 
-### 4. Clean the Board
+### 7. Clean the Board
 
-Always run `ai-finish` when a feature is complete:
+Always run `ai-finish` when a feature is complete. A cluttered `plan.md` leads to a confused AI.
 
-```powershell
-ai-finish
-```
-
-A cluttered `plan.md` leads to a confused AI. Clean state = clear thinking.
-
-### 5. Use the Right Model for the Job
+### 8. Use the Right Model for the Job
 
 Configure routing for efficiency:
 
@@ -364,35 +522,63 @@ ai-config set routing.ai-ask ollama
 ai-config set routing.ai-commit ollama
 ```
 
-### 6. Protect Your Branches
-
-Trismegistus won't let you commit directly to protected branches:
-
-```powershell
-# View protected branches
-ai-config
-
-# These are protected by default: main, master, production, prod
-```
-
 ---
 
 ## Command Quick Reference
 
+### Phase 1: Plan
+
 | Command | Purpose | When to Use |
 |---------|---------|-------------|
-| `ai-plan <task>` | Create execution plan | Starting any task |
-| `ai-exec` | Execute the plan | After planning/verification |
-| `ai-verify` | Hostile review | Before complex executions |
-| `ai-commit` | Safe git commit | After implementation |
-| `ai-finish` | Archive & extract lessons | When feature is done |
-| `ai-architect <problem>` | Tree of Thoughts design | When "how" is unclear |
-| `ai-ask <question>` | Quick consultation | Simple questions |
-| `ai-debug` | Analyze clipboard error | Bug fixing |
-| `ai-evolve <lesson>` | Add rule to memory | After learning something |
 | `ai-init` | Bootstrap project | New/existing projects |
+| `ai-estimate <task>` | Complexity analysis | Before large tasks |
+| `ai-research <topic>` | Deep research | Unfamiliar tech |
+| `ai-architect <problem>` | Tree of Thoughts | When "how" is unclear |
+| `ai-plan <task>` | Create execution plan | Starting any task |
+| `ai-verify` | Hostile review | Before complex executions |
+| `ai-split` | Break into phases | When plan is too large |
+
+### Phase 2: Execute
+
+| Command | Purpose | When to Use |
+|---------|---------|-------------|
+| `ai-exec` | Execute the plan | After planning/verification |
+| `ai-progress` | View phase status | During large features |
+| `ai-continue` | Resume execution | After breaks, context loss |
+| `ai-debug` | Analyze error | Bug fixing |
+| `ai-ask <question>` | Quick consultation | Simple questions |
+
+### Phase 3: Validate
+
+| Command | Purpose | When to Use |
+|---------|---------|-------------|
+| `ai-diff` | Show changes | Before committing |
+| `ai-test` | Run & analyze tests | After implementation |
+| `ai-review` | Code review changes | Before committing |
+| `ai-explain <file>` | Explain code | Understanding code |
+| `ai-context` | Debug AI context | Troubleshooting |
+
+### Phase 4: Ship
+
+| Command | Purpose | When to Use |
+|---------|---------|-------------|
+| `ai-commit` | Safe git commit | After validation |
+| `ai-docs` | Generate docs | After features |
+| `ai-changelog` | Generate changelog | Before releases |
+| `ai-finish` | Archive & learn | When feature done |
+| `ai-ship` | Full pipeline | Confident shipping |
+
+### Utilities
+
+| Command | Purpose | When to Use |
+|---------|---------|-------------|
 | `ai-status` | View current state | Checking context |
-| `ai-help` | Full command list | When lost |
+| `ai-evolve <lesson>` | Add to memory | After learning |
+| `ai-compress` | Consolidate lessons | Maintenance |
+| `ai-wipe` | Clear plan | Starting over |
+| `ai-rollback` | Restore checkpoint | Undo execution |
+| `ai-hotfix <issue>` | Emergency fix | Urgent bugs |
+| `ai-help` | Command reference | When lost |
 
 ---
 
@@ -415,16 +601,39 @@ ai-plan "More specific description of what I want"
 
 ### "Context seems stale"
 
-Force re-sync:
+Check what the AI sees:
 ```powershell
-ai-sync
+ai-context
 ```
 
-### "Too many files in context"
+### "The plan is too big"
 
-Check your `.gitignore` and the context limit:
+Split it:
 ```powershell
-ai-config  # See maxContextFiles setting
+ai-split -Phases 3
+```
+
+### "Lost track of progress"
+
+Check status:
+```powershell
+ai-progress
+ai-continue  # Resume where you left off
+```
+
+### "Tests are failing"
+
+Let AI analyze:
+```powershell
+ai-test         # Analyze failures
+ai-test -Fix    # Attempt to fix automatically
+```
+
+### "What did the AI actually change?"
+
+```powershell
+ai-diff              # Summary
+ai-diff -Detailed    # Full diff
 ```
 
 ---

@@ -6,6 +6,21 @@ Solutions to common issues with Trismegistus.
 
 ---
 
+## Table of Contents
+
+1. [Installation Issues](#installation-issues)
+2. [Runtime Issues](#runtime-issues)
+3. [Git Issues](#git-issues)
+4. [Provider-Specific Issues](#provider-specific-issues)
+5. [Context Issues](#context-issues)
+6. [Progress & Continuation Issues](#progress--continuation-issues)
+7. [Validation Issues](#validation-issues)
+8. [Performance Tips](#performance-tips)
+9. [Reset Everything](#reset-everything)
+10. [Getting Help](#getting-help)
+
+---
+
 ## Installation Issues
 
 ### "File cannot be loaded - not digitally signed"
@@ -257,7 +272,7 @@ Also run `ai-verify` before `ai-exec` on complex tasks.
 **Check CLAUDE.md is properly formatted:**
 
 ```powershell
-code .claude/CLAUDE.md
+code .tris/CLAUDE.md
 ```
 
 Make rules explicit and specific:
@@ -265,6 +280,135 @@ Make rules explicit and specific:
 ## Forbidden
 - NEVER use var, always use const or let
 - NEVER commit console.log statements
+```
+
+### "What does the AI actually see?"
+
+**Debug your context:**
+
+```powershell
+ai-context         # Summary view
+ai-context -Full   # Complete content
+```
+
+This shows you exactly what files, rules, lessons, and references the AI receives.
+
+---
+
+## Progress & Continuation Issues
+
+### "Lost track of where I am"
+
+**Check progress:**
+
+```powershell
+ai-progress
+```
+
+This shows you:
+- Overall completion percentage
+- Each phase with status (✓ complete, ◐ in progress, ○ pending)
+- Last checkpoint timestamp
+
+### "ai-continue keeps re-doing completed work"
+
+**Check your plan has proper phase markers:**
+
+```powershell
+code .tris/active/plan.md
+```
+
+Phases should be marked with headers like:
+```markdown
+## Phase 1: Setup
+- [x] Task 1
+- [x] Task 2
+
+## Phase 2: Implementation
+- [ ] Task 3
+```
+
+The `[x]` checkboxes indicate completion.
+
+### "Context window degraded after many messages"
+
+**This is why ai-continue exists.** Start a fresh context:
+
+```powershell
+ai-continue
+```
+
+This starts a new conversation focused only on the next incomplete phase.
+
+### "No checkpoint found"
+
+**ai-continue needs ai-exec to have run first:**
+
+```powershell
+ai-exec        # Creates checkpoint
+ai-progress    # Check status
+ai-continue    # Resume later
+```
+
+---
+
+## Validation Issues
+
+### "ai-test doesn't detect my test framework"
+
+**Check if your project has the expected files:**
+
+| Framework | Detection File |
+|-----------|---------------|
+| npm/jest | `package.json` |
+| pytest | `pyproject.toml` or `pytest.ini` |
+| cargo | `Cargo.toml` |
+| go | `go.mod` |
+| dotnet | `*.csproj` |
+
+If your framework isn't detected, run tests manually and let ai-debug analyze:
+
+```powershell
+npm test 2>&1 | Set-Clipboard
+ai-debug
+```
+
+### "ai-review finds too many issues"
+
+**Code review can be strict.** Options:
+
+1. Fix the critical/high issues, ignore minor ones
+2. Run with less context:
+   ```powershell
+   ai-diff -Detailed  # See what actually changed
+   ```
+3. Commit anyway if you're confident:
+   ```powershell
+   ai-commit
+   ```
+
+### "ai-diff shows nothing changed"
+
+**Nothing staged in git:**
+
+```powershell
+git status
+```
+
+If you have changes, they might be in gitignored paths or not saved yet.
+
+### "ai-ship pipeline keeps stopping"
+
+**Each phase is a gate.** Fix issues and continue:
+
+```powershell
+ai-ship          # Stops at first failure
+# Fix the issue
+ai-ship          # Restart from beginning
+
+# Or skip specific phases:
+ai-ship -SkipTests
+ai-ship -Force    # Skip all prompts
 ```
 
 ---
@@ -277,6 +421,8 @@ Make rules explicit and specific:
    ```powershell
    ai-config set routing.ai-ask ollama
    ai-config set routing.ai-commit ollama
+   ai-config set routing.ai-diff ollama
+   ai-config set routing.ai-progress ollama
    ```
 
 2. **Reduce context size:**
@@ -296,13 +442,34 @@ Make rules explicit and specific:
    ai-config set routing.ai-ask ollama
    ai-config set routing.ai-commit ollama
    ai-config set routing.ai-debug ollama
+   ai-config set routing.ai-diff ollama
+   ai-config set routing.ai-progress ollama
+   ai-config set routing.ai-context ollama
    ```
 
 2. **Only use premium models for planning:**
    ```powershell
    ai-config set routing.ai-plan claude
    ai-config set routing.ai-architect claude
+   ai-config set routing.ai-review claude
    ```
+
+### Recommended routing
+
+**Cost-optimized setup:**
+
+| Command | Provider | Reason |
+|---------|----------|--------|
+| ai-plan | claude | Complex reasoning |
+| ai-exec | claude | Code generation |
+| ai-verify | claude | Critical review |
+| ai-architect | claude | Design decisions |
+| ai-review | claude | Code quality |
+| ai-test | ollama | Just runs tests |
+| ai-diff | ollama | Simple git diff |
+| ai-progress | ollama | Simple parsing |
+| ai-commit | ollama | Message generation |
+| ai-ask | ollama | Quick questions |
 
 ---
 
@@ -333,6 +500,8 @@ ai-setup
 
 ```powershell
 ai-status     # View current plan/context
+ai-progress   # View phase completion
+ai-context    # Debug what AI sees
 ai-config     # View configuration
 ai-providers  # View available providers
 ai-help       # Full command list
@@ -353,6 +522,22 @@ ai-plan "Test" -Verbose
 2. OS version
 3. Error message
 4. Steps to reproduce
+
+---
+
+## Quick Reference: Common Fixes
+
+| Problem | Solution |
+|---------|----------|
+| AI repeats mistakes | `ai-evolve "Don't do X"` |
+| Plan is wrong | `ai-wipe` then re-plan |
+| Lost progress | `ai-progress` then `ai-continue` |
+| Context stale | `ai-context` to debug |
+| Tests failing | `ai-test -Fix` |
+| Too many review issues | Focus on Critical/High only |
+| Pipeline stuck | `ai-ship -Force` |
+| Context too big | Reduce `maxContextFiles` |
+| Provider down | Change routing to another |
 
 ---
 

@@ -77,6 +77,22 @@ $script:TrisTheme = @{
         INIT      = @{ Symbol = "::"; Color = "Cyan"; Text = "INIT" }
         CONFIG    = @{ Symbol = "{}"; Color = "Gray"; Text = "CONFIG" }
         SYNC      = @{ Symbol = "<>"; Color = "Blue"; Text = "SYNC" }
+        
+        # New commands
+        PROGRESS  = @{ Symbol = ">>"; Color = "Cyan"; Text = "PROGRESS" }
+        CONTINUE  = @{ Symbol = "=>"; Color = "Yellow"; Text = "CONTINUE" }
+        TEST      = @{ Symbol = "%%"; Color = "Blue"; Text = "TEST" }
+        REVIEW    = @{ Symbol = "@@"; Color = "Magenta"; Text = "REVIEW" }
+        DIFF      = @{ Symbol = "+-"; Color = "Cyan"; Text = "DIFF" }
+        CONTEXT   = @{ Symbol = "{}"; Color = "DarkGray"; Text = "CONTEXT" }
+        EXPLAIN   = @{ Symbol = "??"; Color = "Cyan"; Text = "EXPLAIN" }
+        DOCS      = @{ Symbol = "##"; Color = "Blue"; Text = "DOCS" }
+        ESTIMATE  = @{ Symbol = "~~"; Color = "Yellow"; Text = "ESTIMATE" }
+        RESEARCH  = @{ Symbol = "()"; Color = "Magenta"; Text = "RESEARCH" }
+        SPLIT     = @{ Symbol = "/\\"; Color = "Cyan"; Text = "SPLIT" }
+        CHANGELOG = @{ Symbol = "->"; Color = "Green"; Text = "CHANGELOG" }
+        SHIP      = @{ Symbol = "=>"; Color = "Green"; Text = "SHIP" }
+        CHECKPOINT = @{ Symbol = "[]"; Color = "Yellow"; Text = "CHECKPOINT" }
     }
     
     # Philosophical quotes for different contexts
@@ -259,4 +275,255 @@ function Write-TrisTable {
     }
     
     $Data | Format-Table -AutoSize | Out-String | ForEach-Object { Write-Host $_ -ForegroundColor Gray }
+}
+
+# ============================================================================
+# ANIMATIONS & VISUAL EFFECTS
+# ============================================================================
+
+function Show-TrisSpinner {
+    <#
+    .SYNOPSIS
+        Show an animated spinner with message
+    .PARAMETER Message
+        Message to display
+    .PARAMETER ScriptBlock
+        Code to execute while spinner runs
+    #>
+    param(
+        [string]$Message,
+        [scriptblock]$ScriptBlock
+    )
+    
+    $spinChars = @('◜', '◠', '◝', '◞', '◡', '◟')
+    $alchemyChars = @('☿', '☉', '☽', '♄', '♃', '♂', '♀')
+    
+    # Fallback for terminals without Unicode
+    if ($env:WT_SESSION -or $env:TERM_PROGRAM -eq "vscode") {
+        $chars = $alchemyChars
+    } else {
+        $chars = @('|', '/', '-', '\')
+    }
+    
+    $job = Start-Job -ScriptBlock $ScriptBlock
+    $i = 0
+    
+    while ($job.State -eq 'Running') {
+        $char = $chars[$i % $chars.Count]
+        Write-Host "`r  $char $Message" -NoNewline -ForegroundColor Cyan
+        Start-Sleep -Milliseconds 120
+        $i++
+    }
+    
+    Write-Host "`r  ✓ $Message" -ForegroundColor Green
+    Receive-Job $job
+    Remove-Job $job
+}
+
+function Show-TrisOracle {
+    <#
+    .SYNOPSIS
+        Display an oracle consulting animation
+    #>
+    $frames = @(
+        @"
+         .  *  .
+      *    ◯    *
+         .  *  .
+"@,
+        @"
+        . * . * .
+      *    ◉    *
+        . * . * .
+"@,
+        @"
+       *  . * .  *
+      .    ◎    .
+       *  . * .  *
+"@,
+        @"
+        . * . * .
+      *    ◉    *
+        . * . * .
+"@
+    )
+    
+    Write-Host ""
+    for ($i = 0; $i -lt 8; $i++) {
+        $frame = $frames[$i % $frames.Count]
+        Write-Host "`r$frame" -ForegroundColor Magenta -NoNewline
+        Start-Sleep -Milliseconds 200
+    }
+    Write-Host ""
+}
+
+function Show-TrisAlchemy {
+    <#
+    .SYNOPSIS
+        Display an alchemy transmutation animation
+    .PARAMETER Message
+        Completion message
+    #>
+    param([string]$Message = "Transmutation complete")
+    
+    $stages = @(
+        "   [ite  ite  ite  ]   Calcination...",
+        "   [�ite  ite  ite  ]   Dissolution...",
+        "   [▒ite  ite  ite ]   Separation...",
+        "   [▒▒te  ite  ite ]   Conjunction...",
+        "   [▒▒▒e  ite  ite ]   Fermentation...",
+        "   [▒▒▒▒  ite  ite ]   Distillation...",
+        "   [▒▒▒▒▒ ite  ite ]   Coagulation...",
+        "   [▒▒▒▒▒▒ite  ite ]   Transmuting...",
+        "   [▒▒▒▒▒▒▒te  ite ]   Transmuting...",
+        "   [▒▒▒▒▒▒▒▒e  ite ]   Transmuting...",
+        "   [▒▒▒▒▒▒▒▒▒  ite ]   Manifesting...",
+        "   [▒▒▒▒▒▒▒▒▒▒ ite ]   Manifesting...",
+        "   [▒▒▒▒▒▒▒▒▒▒▒ite ]   Manifesting...",
+        "   [▒▒▒▒▒▒▒▒▒▒▒▒te ]   Sealing...",
+        "   [▒▒▒▒▒▒▒▒▒▒▒▒▒e ]   Sealing...",
+        "   [▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ]   Complete!"
+    )
+    
+    foreach ($stage in $stages) {
+        Write-Host "`r$stage" -NoNewline -ForegroundColor Cyan
+        Start-Sleep -Milliseconds 80
+    }
+    Write-Host "`r   [██████████████]   $Message" -ForegroundColor Green
+}
+
+function Show-TrisPhaseComplete {
+    <#
+    .SYNOPSIS
+        Celebratory animation for phase completion
+    .PARAMETER Phase
+        Phase number completed
+    #>
+    param([int]$Phase)
+    
+    $art = @"
+
+    ╔═══════════════════════════════════════╗
+    ║                                       ║
+    ║      ★  PHASE $Phase COMPLETE  ★         ║
+    ║                                       ║
+    ║          ∴ As above ∴                 ║
+    ║          ∵ So below ∵                 ║
+    ║                                       ║
+    ╚═══════════════════════════════════════╝
+
+"@
+    Write-Host $art -ForegroundColor Yellow
+}
+
+function Show-TrisSuccess {
+    <#
+    .SYNOPSIS
+        Display success animation
+    .PARAMETER Message
+        Success message
+    #>
+    param([string]$Message = "Operation Complete")
+    
+    $art = @"
+
+      _______________
+     /               \
+    |    ★ SUCCESS ★  |
+    |   ─────────────  |
+    |   $($Message.PadRight(15).Substring(0,15)) |
+     \_________________/
+            ║
+         ═══╩═══
+
+"@
+    Write-Host $art -ForegroundColor Green
+}
+
+function Show-TrisWarning {
+    <#
+    .SYNOPSIS
+        Display warning with attention-getting animation
+    .PARAMETER Message
+        Warning message
+    #>
+    param([string]$Message)
+    
+    for ($i = 0; $i -lt 3; $i++) {
+        Write-Host "`r  ⚠  " -NoNewline -ForegroundColor Yellow
+        Start-Sleep -Milliseconds 150
+        Write-Host "`r  !  " -NoNewline -ForegroundColor Red
+        Start-Sleep -Milliseconds 150
+    }
+    Write-Host "`r  ⚠  $Message" -ForegroundColor Yellow
+}
+
+function Write-TrisProgressBar {
+    <#
+    .SYNOPSIS
+        Display a progress bar with percentage
+    .PARAMETER Percent
+        Completion percentage (0-100)
+    .PARAMETER Message
+        Progress message
+    .PARAMETER Width
+        Bar width in characters
+    #>
+    param(
+        [int]$Percent,
+        [string]$Message = "",
+        [int]$Width = 30
+    )
+    
+    $filled = [math]::Floor($Width * $Percent / 100)
+    $empty = $Width - $filled
+    $bar = "█" * $filled + "░" * $empty
+    
+    # Color based on progress
+    $color = switch ($Percent) {
+        { $_ -lt 30 } { "Red" }
+        { $_ -lt 70 } { "Yellow" }
+        default { "Green" }
+    }
+    
+    Write-Host "`r  [$bar] $Percent% $Message" -NoNewline -ForegroundColor $color
+}
+
+function Show-TrisDiff {
+    <#
+    .SYNOPSIS
+        Display a styled diff header
+    .PARAMETER Added
+        Number of additions
+    .PARAMETER Removed
+        Number of deletions  
+    .PARAMETER Files
+        Number of files changed
+    #>
+    param(
+        [int]$Added,
+        [int]$Removed,
+        [int]$Files
+    )
+    
+    $addBar = "+" * [math]::Min($Added, 20)
+    $remBar = "-" * [math]::Min($Removed, 20)
+    
+    Write-Host ""
+    Write-Host "  ┌──────────────────────────────────────┐" -ForegroundColor DarkGray
+    Write-Host "  │ " -NoNewline -ForegroundColor DarkGray
+    Write-Host "$Files files changed" -NoNewline -ForegroundColor White
+    Write-Host "                       │" -ForegroundColor DarkGray
+    Write-Host "  │ " -NoNewline -ForegroundColor DarkGray
+    Write-Host "+$Added" -NoNewline -ForegroundColor Green
+    Write-Host " $addBar" -NoNewline -ForegroundColor Green
+    $padding = 30 - $addBar.Length - "$Added".Length
+    Write-Host "$(" " * [math]::Max(0, $padding))│" -ForegroundColor DarkGray
+    Write-Host "  │ " -NoNewline -ForegroundColor DarkGray
+    Write-Host "-$Removed" -NoNewline -ForegroundColor Red
+    Write-Host " $remBar" -NoNewline -ForegroundColor Red
+    $padding = 30 - $remBar.Length - "$Removed".Length
+    Write-Host "$(" " * [math]::Max(0, $padding))│" -ForegroundColor DarkGray
+    Write-Host "  └──────────────────────────────────────┘" -ForegroundColor DarkGray
+    Write-Host ""
 }

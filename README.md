@@ -36,7 +36,9 @@ Plus, it solves the "goldfish memory" problem with **persistent project context*
 |---------|-------------|
 | **Multi-Oracle Routing** | Claude, Gemini, Ollama, OpenAI through one interface |
 | **Persistent Memory** | Project context, lessons learned, execution plans |
+| **Progress Tracking** | Track phases, checkpoint progress, resume cleanly |
 | **Reflexion Loop** | AI critiques its own plans before execution |
+| **Full Validation Pipeline** | Diff, test, review, ship with quality gates |
 | **Safety Rails** | Commit preview, branch protection, rollback |
 | **Cross-Platform** | Windows, macOS, Linux via PowerShell 7 |
 
@@ -45,6 +47,9 @@ Plus, it solves the "goldfish memory" problem with **persistent project context*
 ```powershell
 # Initialize a project
 ai-init
+
+# Estimate complexity
+ai-estimate "Add JWT authentication to the API"
 
 # Plan a feature (uses your configured "planning" model)
 ai-plan "Add JWT authentication to the API"
@@ -55,7 +60,15 @@ ai-verify
 # Execute the plan
 ai-exec
 
-# Review and commit (uses your "quick tasks" model)
+# Check progress on large features
+ai-progress
+
+# Validate before shipping
+ai-diff          # See what changed
+ai-test          # Run tests
+ai-review        # Code review
+
+# Ship it (uses your "quick tasks" model)
 ai-commit
 ```
 
@@ -97,26 +110,60 @@ pwsh
 ai-setup
 ```
 
-## Commands
+## Commands (35 Total)
 
-### Core Workflow
-
-| Command | Description |
-|---------|-------------|
-| `ai-plan <task>` | Create an execution plan |
-| `ai-exec` | Execute the current plan |
-| `ai-verify` | Hostile review of the plan |
-| `ai-commit` | Safe commit with preview |
-| `ai-finish` | Archive and extract lessons |
-
-### Advanced
+### Phase 1: Plan
 
 | Command | Description |
 |---------|-------------|
+| `ai-init` | Bootstrap project with AI context |
+| `ai-estimate <task>` | Analyze complexity before planning |
+| `ai-research <topic>` | Deep research, save to reference/ |
 | `ai-architect <problem>` | Tree of Thoughts design |
-| `ai-hotfix <issue>` | Emergency fix mode |
-| `ai-ask <question>` | Quick consultation |
+| `ai-plan <task>` | Create an execution plan |
+| `ai-verify` | Hostile review of the plan |
+| `ai-split` | Break large plan into phases |
+
+### Phase 2: Execute
+
+| Command | Description |
+|---------|-------------|
+| `ai-exec` | Execute the current plan |
+| `ai-progress` | View phase completion status |
+| `ai-continue` | Resume execution from checkpoint |
 | `ai-debug` | Analyze error from clipboard |
+| `ai-ask <question>` | Quick consultation |
+
+### Phase 3: Validate
+
+| Command | Description |
+|---------|-------------|
+| `ai-diff` | Show changes summary |
+| `ai-test` | Run tests, analyze failures |
+| `ai-review` | Hostile code review |
+| `ai-explain <file>` | Explain code in detail |
+| `ai-context` | Debug what AI sees |
+
+### Phase 4: Ship
+
+| Command | Description |
+|---------|-------------|
+| `ai-commit` | Safe commit with preview |
+| `ai-docs <type>` | Generate documentation |
+| `ai-changelog` | Generate changelog |
+| `ai-finish` | Archive and extract lessons |
+| `ai-ship` | Full quality gate pipeline |
+
+### Utilities
+
+| Command | Description |
+|---------|-------------|
+| `ai-status` | View current plan state |
+| `ai-evolve <lesson>` | Add rule to memory |
+| `ai-compress` | Consolidate lessons |
+| `ai-wipe` | Clear current plan |
+| `ai-rollback` | Restore from checkpoint |
+| `ai-hotfix <issue>` | Emergency fix mode |
 
 ### Configuration
 
@@ -125,8 +172,16 @@ ai-setup
 | `ai-setup` | Interactive first-time setup |
 | `ai-config` | View/modify settings |
 | `ai-providers` | List available AI providers |
+| `ai-help` | Full command reference |
 
-Run `ai-help` for the complete command list.
+### Pipelines
+
+| Command | Description |
+|---------|-------------|
+| `ai-flow-feature <task>` | Full feature pipeline |
+| `ai-flow-bugfix` | Full bugfix pipeline |
+
+Run `ai-help` for the complete command list organized by workflow phase.
 
 ## Configuration
 
@@ -135,10 +190,12 @@ Route different commands to different providers:
 ```powershell
 # Use Claude for complex planning
 ai-config set routing.ai-plan claude
+ai-config set routing.ai-review claude
 
 # Use local Ollama for quick tasks (free, fast, private)
 ai-config set routing.ai-ask ollama
 ai-config set routing.ai-commit ollama
+ai-config set routing.ai-diff ollama
 ```
 
 Configuration is stored in `~/.trismegistus/config.json`.
@@ -152,10 +209,11 @@ When you run `ai-init` in a project, Trismegistus creates:
 ├── CLAUDE.md           # Project rules & conventions
 ├── active/
 │   ├── prd.md          # Project requirements (your "north star")
-│   └── plan.md         # Current execution plan
+│   ├── plan.md         # Current execution plan
+│   └── progress.txt    # Checkpoint tracking
 ├── memory/
 │   └── lessons.md      # Accumulated wisdom from past mistakes
-├── reference/          # API docs, architecture decisions
+├── reference/          # API docs, architecture decisions, research
 └── commands/           # Custom command templates
 ```
 
@@ -181,6 +239,26 @@ Trismegistus is built on three principles:
 2. **Reflexion Loop** — The `ai-verify` command forces the AI to critique its own plan, catching errors before code is written
 
 3. **Multi-Oracle Wisdom** — Different models excel at different tasks. Use the right tool for the job.
+
+## The PIV Loop
+
+Every task follows the **Plan → Implement → Verify** loop:
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│    PLAN      │────▶│   EXECUTE    │────▶│   VALIDATE   │
+│              │     │              │     │              │
+│ ai-estimate  │     │   ai-exec    │     │   ai-diff    │
+│ ai-plan      │     │ ai-progress  │     │   ai-test    │
+│ ai-verify    │     │ ai-continue  │     │  ai-review   │
+└──────────────┘     └──────────────┘     └──────────────┘
+                             │
+                     ┌───────▼───────┐
+                     │     SHIP      │
+                     │   ai-commit   │
+                     │   ai-finish   │
+                     └───────────────┘
+```
 
 ## Contributing
 
