@@ -157,6 +157,9 @@ function Invoke-Oracle {
     $config = $script:TrisConfig
     $providerConfig = $config.providers[$Provider]
     
+    # Show oracle consulting animation
+    Show-TrisOracle -Provider $Provider
+    
     Write-TrisMessage "INVOKE" "Channeling the Oracle of $($Provider.ToUpper())..."
     
     # Get the appropriate adapter

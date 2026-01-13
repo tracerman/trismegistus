@@ -40,6 +40,7 @@ Plus, it solves the "goldfish memory" problem with **persistent project context*
 | **Reflexion Loop** | AI critiques its own plans before execution |
 | **Full Validation Pipeline** | Diff, test, review, ship with quality gates |
 | **Safety Rails** | Commit preview, branch protection, rollback |
+| **Hermetic Visual Theme** | Animated spinners, progress bars, celebrations |
 | **Cross-Platform** | Windows, macOS, Linux via PowerShell 7 |
 
 ## Quick Demo

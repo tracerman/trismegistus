@@ -34,14 +34,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added - Visual Enhancements
 
-- New ASCII animations for operations:
-  - Oracle consulting animation
-  - Alchemy transmutation progress bar
-  - Phase completion celebration
-  - Success/warning animations
-- Enhanced `Write-TrisProgressBar` with color-coded progress
-- `Show-TrisDiff` visual diff stats display
-- Multiple new message types (PROGRESS, CONTINUE, TEST, REVIEW, etc.)
+**Animation System (Completely Redesigned):**
+- `Show-TrisOracle` - Animated oracle consulting with pulsing stars
+- `Show-TrisAlchemy` - 7-stage alchemy transmutation with progress bar
+- `Show-TrisThinking` - Matrix-style rain effect for AI thinking
+- `Show-TrisSpinner` - Multiple spinner styles (alchemy, orbit, dots, braille, moon, elements)
+- `Show-TrisPhaseComplete` - Sparkle/firework celebration effect
+- `Show-TrisSuccess` - Sparkle-framed success message
+- `Show-TrisWarning` - Blinking warning box with animation
+- `Show-TrisError` - Dramatic error display with quote
+- `Show-TrisDiff` - Visual diff stats with bar charts
+- `Show-TrisProgress` - Color-coded progress bar
+- `Show-TrisConfig` - Boxed configuration display
+- `Show-TrisStats` - Project statistics in visual format
+- `Show-TrisTaskList` - Checkbox-style task display
+- `Show-TrisTransmutationCircle` - Full ASCII transmutation circle art
+- `Show-TrisSigil` - Mystical planetary sigil display
+- `Show-TrisShipAnimation` - Rocket ship launch animation
+- `Show-TrisWelcome` - Enhanced startup message with quotes
+
+**Terminal Support:**
+- Auto-detects Unicode/emoji support (Windows Terminal, VS Code, iTerm)
+- Graceful fallback to ASCII for basic terminals
+- Test functions: `Test-UnicodeSupport`, `Test-EmojiSupport`
+
+**Themed Elements:**
+- Emoji-enhanced message prefixes (🔮, ⚗️, 🔥, 🧪, 🚀, etc.)
+- Alchemical symbols (☿, ☉, ☽, ♃, ♄) for progress
+- Box drawing characters for framed displays
+- Philosophical quotes for context (Planning, Execution, Success, Error)
+- Color gradients (Fire, Water, Earth, Air, Gold)
+
+**Typography Effects:**
+- `Write-TrisTyping` - Typewriter effect text
+- `Write-TrisGradient` - Multi-color gradient text
+- `Write-TrisHeader` - Boxed section headers
+- `Write-TrisBox` - Decorative content boxes
+- `Write-TrisQuote` - Random philosophical quotes
 
 ### Changed
 

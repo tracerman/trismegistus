@@ -239,6 +239,9 @@ function ai-init {
     #>
     Write-TrisMessage "INIT" "Initializing the Sacred Geometry..."
     
+    # Show the transmutation circle
+    Show-TrisTransmutationCircle
+    
     # Determine context folder (uses .tris for new, respects existing .claude)
     $ctx = Get-ContextFolder
     
@@ -475,6 +478,10 @@ This file is REQUIRED for the commit process.
 "@
 
     Set-Clipboard -Value $prompt
+    
+    # Show alchemy transmutation animation
+    Show-TrisAlchemy
+    
     Write-TrisMessage "SCRIBE" "The Great Work begins. Opening portal..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-exec" -Provider $Provider -Interactive
@@ -519,6 +526,10 @@ Be ruthless. Better to catch issues now than in production.
 "@
 
     Set-Clipboard -Value $prompt
+    
+    # Show thinking animation
+    Show-TrisThinking -Duration 1 -Message "The Critic scrutinizes the plan..."
+    
     Write-TrisMessage "SCRIBE" "The trial begins..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-verify" -Interactive
@@ -570,7 +581,7 @@ function ai-commit {
     $protected = $script:Config.preferences.protectedBranches ?? @("main", "master", "production")
     
     if ($branch -in $protected -and !$Force) {
-        Write-TrisMessage "WARD" "You are on protected branch '$branch'!"
+        Show-TrisWarning -Message "You are on protected branch '$branch'!" -Blink
         $confirm = Read-Host "Type 'yes' to proceed"
         if ($confirm -ne "yes") {
             Write-TrisMessage "INFO" "Commit cancelled."
@@ -677,7 +688,11 @@ Be concise. Focus on reusable wisdom.
     # Clean up Claude CLI temp files
     Get-ChildItem -Filter "tmpclaude-*-cwd" -ErrorAction SilentlyContinue | Remove-Item -Force
     
+    # Show completion celebration
+    Show-TrisPhaseComplete -Phase 0 -Message "Mission archived!"
+    
     Write-TrisMessage "COMPLETE" "The cycle is complete. Ready for the next Work."
+    Write-TrisQuote -Context "Success"
 }
 
 # ============================================================================
@@ -694,6 +709,9 @@ function ai-architect {
     param([Parameter(Mandatory)][string]$Problem)
     
     Write-TrisMessage "VISION" "Invoking the Council of Three..."
+    
+    # Show the mystical sigil
+    Show-TrisSigil
     
     $ctx = Get-ContextFolder
     
@@ -2291,6 +2309,8 @@ function ai-ship {
     
     ai-commit
     
+    # Celebration animation
+    Show-TrisShipAnimation
     Show-TrisSuccess -Message "Shipped!"
 }
 
@@ -2422,5 +2442,5 @@ function ai-flow-bugfix {
 
 # Display subtle initialization message
 if ($script:Config.theme -eq "hermetic") {
-    Write-Host "⚗️  Trismegistus ready. 'ai-help' for commands." -ForegroundColor DarkMagenta
+    Show-TrisWelcome
 }

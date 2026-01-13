@@ -1,529 +1,835 @@
 # ============================================================================
-#  TRISMEGISTUS - Hermetic Theme
+#  TRISMEGISTUS - Hermetic Theme (Enhanced Edition)
 #  "As above, so below; as within, so without."
 # ============================================================================
 
 $script:TrisTheme = @{
     Name = "hermetic"
     
-    # ASCII Art Banner (Windows-compatible)
+    # ASCII Art Banner - Animated on startup
     Banner = @"
 
-  ___________      .__                                .__          __                
-  \__    ___/______|__| ______ _____   ____   _____ |__|  ______/  |_ __ __  ______
-    |    |  \_  __ \  |/  ___//     \_/ __ \ / ___\ |  | /  ___/\   __\  |  \/  ___/
-    |    |   |  | \/  |\___ \|  Y Y  \  ___// /_/  >|  | \___ \  |  | |  |  /\___ \ 
-    |____|   |__|  |__/____  >__|_|  /\___  >___  / |__|/____  > |__| |____//____  >
-                           \/      \/     \/_____/           \/                  \/ 
-                                                                                        
-              "As above, so below; as within, so without." - The Emerald Tablet
+  ████████╗██████╗ ██╗███████╗███╗   ███╗███████╗ ██████╗ ██╗███████╗████████╗██╗   ██╗███████╗
+  ╚══██╔══╝██╔══██╗██║██╔════╝████╗ ████║██╔════╝██╔════╝ ██║██╔════╝╚══██╔══╝██║   ██║██╔════╝
+     ██║   ██████╔╝██║███████╗██╔████╔██║█████╗  ██║  ███╗██║███████╗   ██║   ██║   ██║███████╗
+     ██║   ██╔══██╗██║╚════██║██║╚██╔╝██║██╔══╝  ██║   ██║██║╚════██║   ██║   ██║   ██║╚════██║
+     ██║   ██║  ██║██║███████║██║ ╚═╝ ██║███████╗╚██████╔╝██║███████║   ██║   ╚██████╔╝███████║
+     ╚═╝   ╚═╝  ╚═╝╚═╝╚══════╝╚═╝     ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚══════╝
+                                                                                        v1.1.0
+"@
 
+    # Alchemical Sigil for operations
+    Sigil = @"
+            ╭─────────────╮
+        ╭───┤  ☿ ☉ ☽ ♃ ♄  ├───╮
+        │   ╰─────────────╯   │
+        │    ◢◣ ORACLE ◢◣    │
+        ╰─────────────────────╯
 "@
 
     # Mini banner for regular operations
     MiniBanner = @"
-+==============================================================+
-|      T R I S M E G I S T U S  - Thrice-Great Orchestrator    |
-+==============================================================+
+╔══════════════════════════════════════════════════════════════════╗
+║    ⚗️  T R I S M E G I S T U S  ·  Thrice-Great Orchestrator    ║
+╚══════════════════════════════════════════════════════════════════╝
+"@
+
+    # Transmutation Circle ASCII Art
+    TransmutationCircle = @"
+                    ╭──────────────────╮
+               ╭────┴────╮        ╭────┴────╮
+              │  🜁 AIR   │        │  🜂 FIRE │
+               ╰────┬────╯        ╰────┬────╯
+          ╭─────────┼──────────────────┼─────────╮
+          │         │     ☉ GOLD ☉     │         │
+          │    ╭────┴────╮        ╭────┴────╮    │
+          │   │ 🜃 EARTH │        │ 🜄 WATER│    │
+          │    ╰────┬────╯        ╰────┬────╯    │
+          ╰─────────┴──────────────────┴─────────╯
 "@
 
     # Message prefixes with symbols
-    # Using ASCII symbols that render well on all terminals
     Messages = @{
         # Core operations
-        INVOKE    = @{ Symbol = ">>"; Color = "Magenta"; Text = "INVOKE" }
-        TRANSMUTE = @{ Symbol = "~~"; Color = "Cyan"; Text = "TRANSMUTE" }
-        MANIFEST  = @{ Symbol = "**"; Color = "Green"; Text = "MANIFEST" }
-        SCRIBE    = @{ Symbol = "::"; Color = "Yellow"; Text = "SCRIBE" }
-        REVEAL    = @{ Symbol = "()"; Color = "White"; Text = "REVEAL" }
+        INVOKE    = @{ Symbol = "⚡"; Color = "Magenta"; Text = "INVOKE" }
+        TRANSMUTE = @{ Symbol = "⚗️"; Color = "Cyan"; Text = "TRANSMUTE" }
+        MANIFEST  = @{ Symbol = "✨"; Color = "Green"; Text = "MANIFEST" }
+        SCRIBE    = @{ Symbol = "📜"; Color = "Yellow"; Text = "SCRIBE" }
+        REVEAL    = @{ Symbol = "👁️"; Color = "White"; Text = "REVEAL" }
         
         # Planning & Architecture
-        DESIGN    = @{ Symbol = "[]"; Color = "Blue"; Text = "DESIGN" }
-        ORACLE    = @{ Symbol = "@@"; Color = "Magenta"; Text = "ORACLE" }
-        VISION    = @{ Symbol = "++"; Color = "Cyan"; Text = "VISION" }
+        DESIGN    = @{ Symbol = "📐"; Color = "Blue"; Text = "DESIGN" }
+        ORACLE    = @{ Symbol = "🔮"; Color = "Magenta"; Text = "ORACLE" }
+        VISION    = @{ Symbol = "🌟"; Color = "Cyan"; Text = "VISION" }
         
         # Execution
-        FORGE     = @{ Symbol = "##"; Color = "Red"; Text = "FORGE" }
-        CREATE    = @{ Symbol = "++"; Color = "Yellow"; Text = "CREATE" }
-        BIND      = @{ Symbol = "<>"; Color = "Gray"; Text = "BIND" }
+        FORGE     = @{ Symbol = "🔥"; Color = "Red"; Text = "FORGE" }
+        CREATE    = @{ Symbol = "⚒️"; Color = "Yellow"; Text = "CREATE" }
+        BIND      = @{ Symbol = "🔗"; Color = "Gray"; Text = "BIND" }
         
         # Validation
-        VERIFY    = @{ Symbol = "??"; Color = "Cyan"; Text = "VERIFY" }
-        JUDGE     = @{ Symbol = "!!"; Color = "Yellow"; Text = "JUDGE" }
-        SEAL      = @{ Symbol = "%%"; Color = "Green"; Text = "SEAL" }
+        VERIFY    = @{ Symbol = "🔍"; Color = "Cyan"; Text = "VERIFY" }
+        JUDGE     = @{ Symbol = "⚖️"; Color = "Yellow"; Text = "JUDGE" }
+        SEAL      = @{ Symbol = "🔏"; Color = "Green"; Text = "SEAL" }
         
         # Git operations
-        COMMIT    = @{ Symbol = "->"; Color = "Green"; Text = "COMMIT" }
-        PUSH      = @{ Symbol = "=>"; Color = "Cyan"; Text = "PUSH" }
-        BRANCH    = @{ Symbol = "~/"; Color = "Green"; Text = "BRANCH" }
+        COMMIT    = @{ Symbol = "📦"; Color = "Green"; Text = "COMMIT" }
+        PUSH      = @{ Symbol = "🚀"; Color = "Cyan"; Text = "PUSH" }
+        BRANCH    = @{ Symbol = "🌿"; Color = "Green"; Text = "BRANCH" }
         
         # Status & Info
-        STATUS    = @{ Symbol = "=="; Color = "Blue"; Text = "STATUS" }
-        INFO      = @{ Symbol = "--"; Color = "Gray"; Text = "INFO" }
-        WISDOM    = @{ Symbol = "$$"; Color = "Yellow"; Text = "WISDOM" }
-        MEMORY    = @{ Symbol = "&&"; Color = "Magenta"; Text = "MEMORY" }
+        STATUS    = @{ Symbol = "📊"; Color = "Blue"; Text = "STATUS" }
+        INFO      = @{ Symbol = "ℹ️"; Color = "Gray"; Text = "INFO" }
+        WISDOM    = @{ Symbol = "📚"; Color = "Yellow"; Text = "WISDOM" }
+        MEMORY    = @{ Symbol = "🧠"; Color = "Magenta"; Text = "MEMORY" }
         
         # Warnings & Errors
-        CHAOS     = @{ Symbol = "!!"; Color = "Red"; Text = "CHAOS" }
-        VOID      = @{ Symbol = ".."; Color = "DarkGray"; Text = "VOID" }
-        WARD      = @{ Symbol = "<!"; Color = "Yellow"; Text = "WARD" }
+        CHAOS     = @{ Symbol = "💥"; Color = "Red"; Text = "CHAOS" }
+        VOID      = @{ Symbol = "🕳️"; Color = "DarkGray"; Text = "VOID" }
+        WARD      = @{ Symbol = "⚠️"; Color = "Yellow"; Text = "WARD" }
         
         # Success
-        COMPLETE  = @{ Symbol = "OK"; Color = "Green"; Text = "COMPLETE" }
-        TRIUMPH   = @{ Symbol = "^^"; Color = "Yellow"; Text = "TRIUMPH" }
-        ASCEND    = @{ Symbol = "/\\"; Color = "Cyan"; Text = "ASCEND" }
+        COMPLETE  = @{ Symbol = "✅"; Color = "Green"; Text = "COMPLETE" }
+        TRIUMPH   = @{ Symbol = "🏆"; Color = "Yellow"; Text = "TRIUMPH" }
+        ASCEND    = @{ Symbol = "⬆️"; Color = "Cyan"; Text = "ASCEND" }
         
         # System
-        INIT      = @{ Symbol = "::"; Color = "Cyan"; Text = "INIT" }
-        CONFIG    = @{ Symbol = "{}"; Color = "Gray"; Text = "CONFIG" }
-        SYNC      = @{ Symbol = "<>"; Color = "Blue"; Text = "SYNC" }
+        INIT      = @{ Symbol = "🌱"; Color = "Cyan"; Text = "INIT" }
+        CONFIG    = @{ Symbol = "⚙️"; Color = "Gray"; Text = "CONFIG" }
+        SYNC      = @{ Symbol = "🔄"; Color = "Blue"; Text = "SYNC" }
         
         # New commands
-        PROGRESS  = @{ Symbol = ">>"; Color = "Cyan"; Text = "PROGRESS" }
-        CONTINUE  = @{ Symbol = "=>"; Color = "Yellow"; Text = "CONTINUE" }
-        TEST      = @{ Symbol = "%%"; Color = "Blue"; Text = "TEST" }
-        REVIEW    = @{ Symbol = "@@"; Color = "Magenta"; Text = "REVIEW" }
-        DIFF      = @{ Symbol = "+-"; Color = "Cyan"; Text = "DIFF" }
-        CONTEXT   = @{ Symbol = "{}"; Color = "DarkGray"; Text = "CONTEXT" }
-        EXPLAIN   = @{ Symbol = "??"; Color = "Cyan"; Text = "EXPLAIN" }
-        DOCS      = @{ Symbol = "##"; Color = "Blue"; Text = "DOCS" }
-        ESTIMATE  = @{ Symbol = "~~"; Color = "Yellow"; Text = "ESTIMATE" }
-        RESEARCH  = @{ Symbol = "()"; Color = "Magenta"; Text = "RESEARCH" }
-        SPLIT     = @{ Symbol = "/\\"; Color = "Cyan"; Text = "SPLIT" }
-        CHANGELOG = @{ Symbol = "->"; Color = "Green"; Text = "CHANGELOG" }
-        SHIP      = @{ Symbol = "=>"; Color = "Green"; Text = "SHIP" }
-        CHECKPOINT = @{ Symbol = "[]"; Color = "Yellow"; Text = "CHECKPOINT" }
+        PROGRESS  = @{ Symbol = "📈"; Color = "Cyan"; Text = "PROGRESS" }
+        CONTINUE  = @{ Symbol = "▶️"; Color = "Yellow"; Text = "CONTINUE" }
+        TEST      = @{ Symbol = "🧪"; Color = "Blue"; Text = "TEST" }
+        REVIEW    = @{ Symbol = "👀"; Color = "Magenta"; Text = "REVIEW" }
+        DIFF      = @{ Symbol = "±"; Color = "Cyan"; Text = "DIFF" }
+        CONTEXT   = @{ Symbol = "📋"; Color = "DarkGray"; Text = "CONTEXT" }
+        EXPLAIN   = @{ Symbol = "💡"; Color = "Cyan"; Text = "EXPLAIN" }
+        DOCS      = @{ Symbol = "📖"; Color = "Blue"; Text = "DOCS" }
+        ESTIMATE  = @{ Symbol = "⏱️"; Color = "Yellow"; Text = "ESTIMATE" }
+        RESEARCH  = @{ Symbol = "🔬"; Color = "Magenta"; Text = "RESEARCH" }
+        SPLIT     = @{ Symbol = "✂️"; Color = "Cyan"; Text = "SPLIT" }
+        CHANGELOG = @{ Symbol = "📝"; Color = "Green"; Text = "CHANGELOG" }
+        SHIP      = @{ Symbol = "🚢"; Color = "Green"; Text = "SHIP" }
+        CHECKPOINT = @{ Symbol = "💾"; Color = "Yellow"; Text = "CHECKPOINT" }
+        THINKING  = @{ Symbol = "🤔"; Color = "Magenta"; Text = "THINKING" }
     }
     
     # Philosophical quotes for different contexts
     Quotes = @{
         Planning = @(
-            "The All is Mind; the Universe is Mental.",
-            "Every cause has its effect; every effect has its cause.",
-            "To change your mood or mental state, change your vibration."
+            "The beginning of wisdom is the definition of terms. - Socrates",
+            "Give me six hours to chop down a tree and I will spend four sharpening the axe. - Lincoln",
+            "Measure twice, cut once. - Ancient Wisdom",
+            "The map is not the territory. - Korzybski"
         )
         Execution = @(
-            "The lips of wisdom are closed, except to the ears of Understanding.",
-            "Under, and behind, all outward appearances, there is always Substance.",
-            "Everything flows, out and in; everything has its tides."
+            "The Great Work advances one step at a time.",
+            "That which is Below corresponds to that which is Above.",
+            "In the forge of action, intention becomes reality.",
+            "The philosopher's stone is found in the work itself."
         )
-        Completion = @(
-            "The possession of Knowledge, unless accompanied by Action, is like hoarding gold.",
-            "To destroy an undesirable rate of mental vibration, put into operation the Principle of Polarity.",
-            "True mental transmutation is a Mental Art."
+        Verification = @(
+            "Trust, but verify. - Ancient Proverb",
+            "The unexamined code is not worth deploying.",
+            "Doubt is the beginning of wisdom. - Descartes",
+            "To know that we know what we know... that is true knowledge. - Copernicus"
+        )
+        Success = @(
+            "The Work is complete. The Gold is manifest.",
+            "As above, so below - the transmutation is sealed.",
+            "What was scattered has been gathered.",
+            "The Great Work advances!"
         )
         Error = @(
-            "In Chaos, seek the Pattern.",
-            "The unbalanced must be equilibrated.",
-            "Every failure is a lesson in disguise."
+            "Even in chaos, there is wisdom to be found.",
+            "The prima materia must sometimes be returned to the vessel.",
+            "Failure is but another step on the path to transmutation."
         )
     }
     
-    # Progress indicators
-    Progress = @{
-        Stages = @(".", "o", "O", "@", "#")
-        Spinner = @("|", "/", "-", "\")
+    # Alchemical symbols for progress indicators
+    AlchemySymbols = @{
+        Elements = @("🜁", "🜂", "🜃", "🜄")
+        Planets = @("☉", "☽", "☿", "♀", "♂", "♃", "♄")
+        Processes = @("△", "▽", "◇", "○", "●", "◐", "◑")
+        Progress = @("░", "▒", "▓", "█")
+    }
+    
+    # Color Gradients
+    GradientColors = @{
+        Fire = @("DarkRed", "Red", "DarkYellow", "Yellow")
+        Water = @("DarkBlue", "Blue", "DarkCyan", "Cyan")
+        Earth = @("DarkGray", "Gray", "DarkGreen", "Green")
+        Air = @("DarkMagenta", "Magenta", "White", "Cyan")
+        Gold = @("DarkYellow", "Yellow", "White", "Yellow")
     }
 }
+
+# ============================================================================
+# TERMINAL CAPABILITY DETECTION
+# ============================================================================
+
+function Test-UnicodeSupport {
+    return ($env:WT_SESSION -or 
+            $env:TERM_PROGRAM -eq "vscode" -or 
+            $env:TERM_PROGRAM -eq "iTerm.app" -or
+            $env:COLORTERM -eq "truecolor")
+}
+
+function Test-EmojiSupport {
+    return ($env:WT_SESSION -or $env:TERM_PROGRAM -eq "vscode")
+}
+
+# ============================================================================
+# CORE MESSAGE FUNCTIONS
+# ============================================================================
 
 function Write-TrisMessage {
-    <#
-    .SYNOPSIS
-        Write a themed message to the console
-    .PARAMETER Type
-        Message type (INVOKE, TRANSMUTE, MANIFEST, CHAOS, etc.)
-    .PARAMETER Message
-        The message content
-    .PARAMETER NoNewline
-        Don't add newline at end
-    #>
     param(
-        [Parameter(Mandatory)]
         [string]$Type,
-        [Parameter(Mandatory)]
-        [string]$Message,
-        [switch]$NoNewline
-    )
-    
-    $theme = $script:TrisTheme
-    $msgConfig = $theme.Messages[$Type]
-    
-    if (!$msgConfig) {
-        # Fallback for unknown types
-        $msgConfig = @{ Symbol = ".."; Color = "White"; Text = $Type }
-    }
-    
-    $prefix = "$($msgConfig.Symbol) [$($msgConfig.Text)]"
-    
-    Write-Host $prefix -ForegroundColor $msgConfig.Color -NoNewline
-    Write-Host " $Message" -NoNewline:$NoNewline
-}
-
-function Write-TrisBanner {
-    <#
-    .SYNOPSIS
-        Display the Trismegistus banner
-    .PARAMETER Mini
-        Show the mini banner instead of full
-    #>
-    param([switch]$Mini)
-    
-    $theme = $script:TrisTheme
-    
-    if ($Mini) {
-        Write-Host $theme.MiniBanner -ForegroundColor Cyan
-    } else {
-        Write-Host $theme.Banner -ForegroundColor Magenta
-    }
-}
-
-function Get-TrisQuote {
-    <#
-    .SYNOPSIS
-        Get a random philosophical quote for the context
-    .PARAMETER Context
-        The context (Planning, Execution, Completion, Error)
-    #>
-    param([string]$Context = "Planning")
-    
-    $quotes = $script:TrisTheme.Quotes[$Context]
-    if ($quotes) {
-        return $quotes | Get-Random
-    }
-    return "As above, so below."
-}
-
-function Write-TrisProgress {
-    <#
-    .SYNOPSIS
-        Display a progress indicator
-    .PARAMETER Current
-        Current step number
-    .PARAMETER Total
-        Total steps
-    .PARAMETER Message
-        Progress message
-    #>
-    param(
-        [int]$Current,
-        [int]$Total,
         [string]$Message
     )
     
-    $percent = [math]::Round(($Current / $Total) * 100)
-    $stages = $script:TrisTheme.Progress.Stages
-    $stageIndex = [math]::Floor(($Current / $Total) * ($stages.Count - 1))
-    $symbol = $stages[$stageIndex]
+    $msgConfig = $script:TrisTheme.Messages[$Type]
+    if (!$msgConfig) {
+        $msgConfig = @{ Symbol = "·"; Color = "White"; Text = $Type }
+    }
     
-    Write-Host "`r$symbol [$Current/$Total] $Message ($percent%)" -NoNewline -ForegroundColor Cyan
+    $symbol = if (Test-EmojiSupport) { $msgConfig.Symbol } else { "[" + $msgConfig.Text.Substring(0,1) + "]" }
+    $color = $msgConfig.Color
+    
+    Write-Host "  $symbol " -ForegroundColor $color -NoNewline
+    Write-Host "[$($msgConfig.Text)]" -ForegroundColor DarkGray -NoNewline
+    Write-Host " $Message" -ForegroundColor White
+}
+
+function Write-TrisHeader {
+    param([string]$Title)
+    
+    $width = 60
+    $padding = [math]::Max(0, ($width - $Title.Length - 4) / 2)
+    $leftPad = " " * [math]::Floor($padding)
+    $rightPad = " " * [math]::Ceiling($padding)
+    
+    Write-Host ""
+    Write-Host "╔$("═" * $width)╗" -ForegroundColor DarkMagenta
+    Write-Host "║$leftPad  $Title  $rightPad║" -ForegroundColor Magenta
+    Write-Host "╚$("═" * $width)╝" -ForegroundColor DarkMagenta
+    Write-Host ""
 }
 
 function Write-TrisBox {
-    <#
-    .SYNOPSIS
-        Write content in a decorative box
-    .PARAMETER Title
-        Box title
-    .PARAMETER Content
-        Box content (string array)
-    .PARAMETER Color
-        Border color
-    #>
     param(
-        [string]$Title,
         [string[]]$Content,
-        [string]$Color = "Cyan"
+        [string]$BorderColor = "DarkCyan",
+        [string]$ContentColor = "White"
     )
     
-    $width = 60
-    $titlePadded = " $Title ".PadLeft(([math]::Floor(($width - $Title.Length) / 2)) + $Title.Length + 1).PadRight($width)
+    $maxLen = ($Content | Measure-Object -Property Length -Maximum).Maximum
+    $width = [math]::Max($maxLen + 4, 40)
     
-    Write-Host "+$("-" * $width)+" -ForegroundColor $Color
-    Write-Host "|$titlePadded|" -ForegroundColor $Color
-    Write-Host "+$("-" * $width)+" -ForegroundColor $Color
-    
+    Write-Host "┌$("─" * $width)┐" -ForegroundColor $BorderColor
     foreach ($line in $Content) {
-        $paddedLine = " $line".PadRight($width)
-        if ($paddedLine.Length -gt $width) {
-            $paddedLine = $paddedLine.Substring(0, $width)
+        $pad = $width - $line.Length - 2
+        Write-Host "│ " -ForegroundColor $BorderColor -NoNewline
+        Write-Host $line -ForegroundColor $ContentColor -NoNewline
+        Write-Host "$(" " * $pad)│" -ForegroundColor $BorderColor
+    }
+    Write-Host "└$("─" * $width)┘" -ForegroundColor $BorderColor
+}
+
+function Write-TrisQuote {
+    param([string]$Context = "Planning")
+    
+    $quotes = $script:TrisTheme.Quotes[$Context]
+    if ($quotes -and $quotes.Count -gt 0) {
+        $quote = $quotes | Get-Random
+        Write-Host ""
+        Write-Host "    ✧ " -ForegroundColor DarkYellow -NoNewline
+        Write-Host $quote -ForegroundColor DarkGray
+        Write-Host ""
+    }
+}
+
+# ============================================================================
+# ADVANCED ANIMATIONS & VISUAL EFFECTS
+# ============================================================================
+
+function Show-TrisBanner {
+    param([switch]$Animated)
+    
+    $banner = $script:TrisTheme.Banner
+    $lines = $banner -split "`n"
+    
+    if ($Animated -and (Test-UnicodeSupport)) {
+        foreach ($line in $lines) {
+            Write-Host $line -ForegroundColor Magenta
+            Start-Sleep -Milliseconds 30
         }
-        Write-Host "|" -ForegroundColor $Color -NoNewline
-        Write-Host $paddedLine -NoNewline
-        Write-Host "|" -ForegroundColor $Color
+    } else {
+        Write-Host $banner -ForegroundColor Magenta
     }
-    
-    Write-Host "+$("-" * $width)+" -ForegroundColor $Color
 }
-
-function Write-TrisTable {
-    <#
-    .SYNOPSIS
-        Display data in a formatted table
-    .PARAMETER Data
-        Array of PSCustomObjects to display
-    .PARAMETER Title
-        Table title
-    #>
-    param(
-        [array]$Data,
-        [string]$Title = ""
-    )
-    
-    if ($Title) {
-        Write-Host "`n  $Title" -ForegroundColor Magenta
-        Write-Host "  $("-" * ($Title.Length + 4))" -ForegroundColor DarkGray
-    }
-    
-    $Data | Format-Table -AutoSize | Out-String | ForEach-Object { Write-Host $_ -ForegroundColor Gray }
-}
-
-# ============================================================================
-# ANIMATIONS & VISUAL EFFECTS
-# ============================================================================
 
 function Show-TrisSpinner {
-    <#
-    .SYNOPSIS
-        Show an animated spinner with message
-    .PARAMETER Message
-        Message to display
-    .PARAMETER ScriptBlock
-        Code to execute while spinner runs
-    #>
     param(
         [string]$Message,
-        [scriptblock]$ScriptBlock
+        [scriptblock]$ScriptBlock,
+        [ValidateSet("alchemy", "orbit", "dots", "braille", "moon", "elements")]
+        [string]$Style = "alchemy"
     )
     
-    $spinChars = @('◜', '◠', '◝', '◞', '◡', '◟')
-    $alchemyChars = @('☿', '☉', '☽', '♄', '♃', '♂', '♀')
+    $spinnerFrames = switch ($Style) {
+        "alchemy"  { @("☿", "☉", "☽", "♄", "♃", "♂", "♀", "⚗") }
+        "orbit"    { @("◜", "◠", "◝", "◞", "◡", "◟") }
+        "dots"     { @("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏") }
+        "braille"  { @("⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷") }
+        "moon"     { @("🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘") }
+        "elements" { @("🜁", "🜂", "🜃", "🜄") }
+        default    { @("|", "/", "-", "\") }
+    }
     
-    # Fallback for terminals without Unicode
-    if ($env:WT_SESSION -or $env:TERM_PROGRAM -eq "vscode") {
-        $chars = $alchemyChars
-    } else {
-        $chars = @('|', '/', '-', '\')
+    if (!(Test-UnicodeSupport)) {
+        $spinnerFrames = @("|", "/", "-", "\")
     }
     
     $job = Start-Job -ScriptBlock $ScriptBlock
     $i = 0
+    $colors = @("Magenta", "Cyan", "Blue", "Cyan")
     
     while ($job.State -eq 'Running') {
-        $char = $chars[$i % $chars.Count]
-        Write-Host "`r  $char $Message" -NoNewline -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 120
+        $frame = $spinnerFrames[$i % $spinnerFrames.Count]
+        $color = $colors[$i % $colors.Count]
+        Write-Host "`r  $frame " -NoNewline -ForegroundColor $color
+        Write-Host $Message -NoNewline -ForegroundColor White
+        Write-Host "   " -NoNewline
+        Start-Sleep -Milliseconds 100
         $i++
     }
     
-    Write-Host "`r  ✓ $Message" -ForegroundColor Green
-    Receive-Job $job
+    Write-Host "`r  ✓ " -NoNewline -ForegroundColor Green
+    Write-Host $Message -ForegroundColor Green
+    Write-Host ""
+    
+    $result = Receive-Job $job
     Remove-Job $job
+    return $result
 }
 
 function Show-TrisOracle {
-    <#
-    .SYNOPSIS
-        Display an oracle consulting animation
-    #>
+    param([string]$Provider = "Oracle")
+    
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  Consulting $Provider..." -ForegroundColor Magenta
+        return
+    }
+    
     $frames = @(
         @"
-         .  *  .
-      *    ◯    *
-         .  *  .
+              ·  ✦  ·
+           ✦    ◯    ✦
+              ·  ✦  ·
 "@,
         @"
-        . * . * .
-      *    ◉    *
-        . * . * .
+            ·  ✦ · ✦  ·
+           ✦    ◉    ✦
+            ·  ✦ · ✦  ·
 "@,
         @"
-       *  . * .  *
-      .    ◎    .
-       *  . * .  *
+           · ✦ · ✦ · ✦ ·
+          ✦     ◎     ✦
+           · ✦ · ✦ · ✦ ·
 "@,
         @"
-        . * . * .
-      *    ◉    *
-        . * . * .
+          · ✦ · ✧ · ✦ ·
+         ✦    ✺ ✺    ✦
+          · ✦ · ✧ · ✦ ·
+"@,
+        @"
+         ·✦·✧·☆·✧·✦·
+        ✦    ★ ★    ✦
+         ·✦·✧·☆·✧·✦·
 "@
     )
     
+    $colors = @("DarkMagenta", "Magenta", "Blue", "Cyan", "White")
+    
     Write-Host ""
-    for ($i = 0; $i -lt 8; $i++) {
+    [Console]::CursorVisible = $false
+    $startY = [Console]::CursorTop
+    
+    for ($i = 0; $i -lt 10; $i++) {
         $frame = $frames[$i % $frames.Count]
-        Write-Host "`r$frame" -ForegroundColor Magenta -NoNewline
-        Start-Sleep -Milliseconds 200
+        $color = $colors[$i % $colors.Count]
+        
+        [Console]::SetCursorPosition(0, $startY)
+        Write-Host $frame -ForegroundColor $color
+        Start-Sleep -Milliseconds 150
     }
+    
+    [Console]::CursorVisible = $true
+    Write-Host "           Consulting the $Provider..." -ForegroundColor Magenta
     Write-Host ""
 }
 
 function Show-TrisAlchemy {
-    <#
-    .SYNOPSIS
-        Display an alchemy transmutation animation
-    .PARAMETER Message
-        Completion message
-    #>
-    param([string]$Message = "Transmutation complete")
-    
-    $stages = @(
-        "   [ite  ite  ite  ]   Calcination...",
-        "   [�ite  ite  ite  ]   Dissolution...",
-        "   [▒ite  ite  ite ]   Separation...",
-        "   [▒▒te  ite  ite ]   Conjunction...",
-        "   [▒▒▒e  ite  ite ]   Fermentation...",
-        "   [▒▒▒▒  ite  ite ]   Distillation...",
-        "   [▒▒▒▒▒ ite  ite ]   Coagulation...",
-        "   [▒▒▒▒▒▒ite  ite ]   Transmuting...",
-        "   [▒▒▒▒▒▒▒te  ite ]   Transmuting...",
-        "   [▒▒▒▒▒▒▒▒e  ite ]   Transmuting...",
-        "   [▒▒▒▒▒▒▒▒▒  ite ]   Manifesting...",
-        "   [▒▒▒▒▒▒▒▒▒▒ ite ]   Manifesting...",
-        "   [▒▒▒▒▒▒▒▒▒▒▒ite ]   Manifesting...",
-        "   [▒▒▒▒▒▒▒▒▒▒▒▒te ]   Sealing...",
-        "   [▒▒▒▒▒▒▒▒▒▒▒▒▒e ]   Sealing...",
-        "   [▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ]   Complete!"
+    param(
+        [string]$Message = "Transmutation complete",
+        [int]$Duration = 1500
     )
     
-    foreach ($stage in $stages) {
-        Write-Host "`r$stage" -NoNewline -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 80
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  Processing..." -ForegroundColor Cyan
+        return
     }
-    Write-Host "`r   [██████████████]   $Message" -ForegroundColor Green
+    
+    $stages = @(
+        @{ Name = "Calcination"; Symbol = "🜂"; Color = "Red" },
+        @{ Name = "Dissolution"; Symbol = "🜄"; Color = "Blue" },
+        @{ Name = "Separation"; Symbol = "🜁"; Color = "Cyan" },
+        @{ Name = "Conjunction"; Symbol = "☿"; Color = "Magenta" },
+        @{ Name = "Fermentation"; Symbol = "♃"; Color = "Yellow" },
+        @{ Name = "Distillation"; Symbol = "☽"; Color = "White" },
+        @{ Name = "Coagulation"; Symbol = "☉"; Color = "Yellow" }
+    )
+    
+    $width = 30
+    $sleepTime = [math]::Max(50, $Duration / ($width + $stages.Count))
+    
+    Write-Host ""
+    [Console]::CursorVisible = $false
+    
+    foreach ($stage in $stages) {
+        Write-Host "`r  $($stage.Symbol) " -NoNewline -ForegroundColor $stage.Color
+        Write-Host "$($stage.Name)..." -NoNewline -ForegroundColor DarkGray
+        Write-Host "          " -NoNewline
+        Start-Sleep -Milliseconds ($sleepTime * 2)
+    }
+    
+    Write-Host ""
+    for ($i = 0; $i -le $width; $i++) {
+        $filled = "█" * $i
+        $empty = "░" * ($width - $i)
+        $percent = [math]::Round(($i / $width) * 100)
+        
+        $color = if ($percent -lt 33) { "Red" } 
+                 elseif ($percent -lt 66) { "Yellow" } 
+                 else { "Green" }
+        
+        Write-Host "`r  ⚗️ [" -NoNewline -ForegroundColor DarkGray
+        Write-Host $filled -NoNewline -ForegroundColor $color
+        Write-Host $empty -NoNewline -ForegroundColor DarkGray
+        Write-Host "] $percent%" -NoNewline -ForegroundColor $color
+        
+        Start-Sleep -Milliseconds $sleepTime
+    }
+    
+    [Console]::CursorVisible = $true
+    Write-Host ""
+    Write-Host "  ✨ $Message" -ForegroundColor Green
+    Write-Host ""
 }
 
 function Show-TrisPhaseComplete {
-    <#
-    .SYNOPSIS
-        Celebratory animation for phase completion
-    .PARAMETER Phase
-        Phase number completed
-    #>
-    param([int]$Phase)
+    param(
+        [int]$Phase = 1,
+        [string]$Message = "Phase complete!"
+    )
     
-    $art = @"
-
-    ╔═══════════════════════════════════════╗
-    ║                                       ║
-    ║      ★  PHASE $Phase COMPLETE  ★         ║
-    ║                                       ║
-    ║          ∴ As above ∴                 ║
-    ║          ∵ So below ∵                 ║
-    ║                                       ║
-    ╚═══════════════════════════════════════╝
-
-"@
-    Write-Host $art -ForegroundColor Yellow
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  [OK] Phase $Phase complete!" -ForegroundColor Green
+        return
+    }
+    
+    $sparkles = @("✦", "✧", "★", "☆", "✴", "✳", "❇", "✨")
+    
+    Write-Host ""
+    [Console]::CursorVisible = $false
+    
+    for ($burst = 0; $burst -lt 3; $burst++) {
+        $line = "  "
+        for ($i = 0; $i -lt 20; $i++) {
+            $sparkle = $sparkles | Get-Random
+            $line += $sparkle
+        }
+        $colors = @("Yellow", "Cyan", "Magenta", "White")
+        Write-Host "`r$line" -NoNewline -ForegroundColor ($colors | Get-Random)
+        Start-Sleep -Milliseconds 100
+    }
+    
+    [Console]::CursorVisible = $true
+    Write-Host ""
+    Write-Host "  🏆 " -NoNewline -ForegroundColor Yellow
+    Write-Host "PHASE $Phase COMPLETE" -NoNewline -ForegroundColor Green
+    Write-Host " - $Message" -ForegroundColor White
+    Write-Host ""
+    
+    Write-TrisQuote -Context "Success"
 }
 
 function Show-TrisSuccess {
-    <#
-    .SYNOPSIS
-        Display success animation
-    .PARAMETER Message
-        Success message
-    #>
-    param([string]$Message = "Operation Complete")
+    param([string]$Message = "Operation successful!")
     
-    $art = @"
-
-      _______________
-     /               \
-    |    ★ SUCCESS ★  |
-    |   ─────────────  |
-    |   $($Message.PadRight(15).Substring(0,15)) |
-     \_________________/
-            ║
-         ═══╩═══
-
-"@
-    Write-Host $art -ForegroundColor Green
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  [OK] $Message" -ForegroundColor Green
+        return
+    }
+    
+    $sparkle = "✨ ★ ✦ ★ ✨"
+    
+    Write-Host ""
+    Write-Host "  $sparkle" -ForegroundColor Yellow
+    Write-Host "  ✅ $Message" -ForegroundColor Green
+    Write-Host "  $sparkle" -ForegroundColor Yellow
+    Write-Host ""
 }
 
 function Show-TrisWarning {
-    <#
-    .SYNOPSIS
-        Display warning with attention-getting animation
-    .PARAMETER Message
-        Warning message
-    #>
-    param([string]$Message)
-    
-    for ($i = 0; $i -lt 3; $i++) {
-        Write-Host "`r  ⚠  " -NoNewline -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 150
-        Write-Host "`r  !  " -NoNewline -ForegroundColor Red
-        Start-Sleep -Milliseconds 150
-    }
-    Write-Host "`r  ⚠  $Message" -ForegroundColor Yellow
-}
-
-function Write-TrisProgressBar {
-    <#
-    .SYNOPSIS
-        Display a progress bar with percentage
-    .PARAMETER Percent
-        Completion percentage (0-100)
-    .PARAMETER Message
-        Progress message
-    .PARAMETER Width
-        Bar width in characters
-    #>
     param(
-        [int]$Percent,
-        [string]$Message = "",
-        [int]$Width = 30
+        [string]$Message,
+        [switch]$Blink
     )
     
-    $filled = [math]::Floor($Width * $Percent / 100)
-    $empty = $Width - $filled
-    $bar = "█" * $filled + "░" * $empty
-    
-    # Color based on progress
-    $color = switch ($Percent) {
-        { $_ -lt 30 } { "Red" }
-        { $_ -lt 70 } { "Yellow" }
-        default { "Green" }
+    if ($Blink -and (Test-UnicodeSupport)) {
+        [Console]::CursorVisible = $false
+        for ($i = 0; $i -lt 3; $i++) {
+            Write-Host "`r  ⚠️  WARNING: $Message" -ForegroundColor Yellow
+            Start-Sleep -Milliseconds 200
+            Write-Host "`r  ⚠️  WARNING: $Message" -ForegroundColor DarkYellow
+            Start-Sleep -Milliseconds 200
+        }
+        [Console]::CursorVisible = $true
+        Write-Host ""
+    } else {
+        Write-Host ""
+        Write-Host "  ╔══════════════════════════════════════════════════╗" -ForegroundColor Yellow
+        Write-Host "  ║  ⚠️  WARNING                                      ║" -ForegroundColor Yellow
+        Write-Host "  ╟──────────────────────────────────────────────────╢" -ForegroundColor Yellow
+        Write-Host "  ║  $Message" -ForegroundColor White -NoNewline
+        $pad = 50 - $Message.Length
+        Write-Host "$(" " * [math]::Max(0,$pad))║" -ForegroundColor Yellow
+        Write-Host "  ╚══════════════════════════════════════════════════╝" -ForegroundColor Yellow
+        Write-Host ""
     }
+}
+
+function Show-TrisError {
+    param([string]$Message)
     
-    Write-Host "`r  [$bar] $Percent% $Message" -NoNewline -ForegroundColor $color
+    Write-Host ""
+    Write-Host "  ╔══════════════════════════════════════════════════╗" -ForegroundColor Red
+    Write-Host "  ║  💥 ERROR                                        ║" -ForegroundColor Red
+    Write-Host "  ╟──────────────────────────────────────────────────╢" -ForegroundColor Red
+    Write-Host "  ║  $Message" -ForegroundColor White -NoNewline
+    $pad = 50 - $Message.Length
+    Write-Host "$(" " * [math]::Max(0,$pad))║" -ForegroundColor Red
+    Write-Host "  ╚══════════════════════════════════════════════════╝" -ForegroundColor Red
+    Write-Host ""
+    
+    Write-TrisQuote -Context "Error"
 }
 
 function Show-TrisDiff {
-    <#
-    .SYNOPSIS
-        Display a styled diff header
-    .PARAMETER Added
-        Number of additions
-    .PARAMETER Removed
-        Number of deletions  
-    .PARAMETER Files
-        Number of files changed
-    #>
     param(
-        [int]$Added,
-        [int]$Removed,
-        [int]$Files
+        [int]$Added = 0,
+        [int]$Removed = 0,
+        [int]$Files = 0
     )
     
-    $addBar = "+" * [math]::Min($Added, 20)
-    $remBar = "-" * [math]::Min($Removed, 20)
+    $total = $Added + $Removed
+    if ($total -eq 0) { $total = 1 }
+    
+    $maxBarWidth = 30
+    $addBar = [math]::Min($maxBarWidth, [math]::Ceiling(($Added / $total) * $maxBarWidth))
+    $remBar = [math]::Min($maxBarWidth, [math]::Ceiling(($Removed / $total) * $maxBarWidth))
     
     Write-Host ""
-    Write-Host "  ┌──────────────────────────────────────┐" -ForegroundColor DarkGray
-    Write-Host "  │ " -NoNewline -ForegroundColor DarkGray
-    Write-Host "$Files files changed" -NoNewline -ForegroundColor White
-    Write-Host "                       │" -ForegroundColor DarkGray
-    Write-Host "  │ " -NoNewline -ForegroundColor DarkGray
-    Write-Host "+$Added" -NoNewline -ForegroundColor Green
-    Write-Host " $addBar" -NoNewline -ForegroundColor Green
-    $padding = 30 - $addBar.Length - "$Added".Length
-    Write-Host "$(" " * [math]::Max(0, $padding))│" -ForegroundColor DarkGray
-    Write-Host "  │ " -NoNewline -ForegroundColor DarkGray
-    Write-Host "-$Removed" -NoNewline -ForegroundColor Red
-    Write-Host " $remBar" -NoNewline -ForegroundColor Red
-    $padding = 30 - $remBar.Length - "$Removed".Length
-    Write-Host "$(" " * [math]::Max(0, $padding))│" -ForegroundColor DarkGray
-    Write-Host "  └──────────────────────────────────────┘" -ForegroundColor DarkGray
+    Write-Host "  ╭────────────────────────────────────────────╮" -ForegroundColor DarkGray
+    Write-Host "  │  📊 DIFF SUMMARY                           │" -ForegroundColor DarkGray
+    Write-Host "  ├────────────────────────────────────────────┤" -ForegroundColor DarkGray
+    Write-Host "  │  Files changed: " -NoNewline -ForegroundColor DarkGray
+    Write-Host "$Files" -NoNewline -ForegroundColor Cyan
+    Write-Host "                          │" -ForegroundColor DarkGray
+    Write-Host "  │  +" -NoNewline -ForegroundColor DarkGray
+    Write-Host "$Added" -NoNewline -ForegroundColor Green
+    Write-Host " $("█" * $addBar)" -NoNewline -ForegroundColor Green
+    Write-Host "$(" " * ($maxBarWidth - $addBar + 5))│" -ForegroundColor DarkGray
+    Write-Host "  │  -" -NoNewline -ForegroundColor DarkGray
+    Write-Host "$Removed" -NoNewline -ForegroundColor Red
+    Write-Host " $("█" * $remBar)" -NoNewline -ForegroundColor Red
+    Write-Host "$(" " * ($maxBarWidth - $remBar + 5))│" -ForegroundColor DarkGray
+    Write-Host "  ╰────────────────────────────────────────────╯" -ForegroundColor DarkGray
     Write-Host ""
 }
+
+function Show-TrisProgress {
+    param(
+        [int]$Current,
+        [int]$Total,
+        [string]$Message = ""
+    )
+    
+    $percent = if ($Total -gt 0) { [math]::Round(($Current / $Total) * 100) } else { 0 }
+    $width = 25
+    $filled = [math]::Floor(($percent / 100) * $width)
+    
+    $bar = "█" * $filled + "░" * ($width - $filled)
+    
+    $color = if ($percent -lt 33) { "Red" } 
+             elseif ($percent -lt 66) { "Yellow" } 
+             else { "Green" }
+    
+    Write-Host "`r  [" -NoNewline -ForegroundColor DarkGray
+    Write-Host $bar -NoNewline -ForegroundColor $color
+    Write-Host "] " -NoNewline -ForegroundColor DarkGray
+    Write-Host "$percent%" -NoNewline -ForegroundColor $color
+    Write-Host " ($Current/$Total) $Message" -NoNewline -ForegroundColor White
+}
+
+function Show-TrisThinking {
+    param(
+        [int]$Duration = 2,
+        [string]$Message = "The Oracle contemplates..."
+    )
+    
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  Thinking..." -ForegroundColor Magenta
+        Start-Sleep -Seconds $Duration
+        return
+    }
+    
+    $chars = @("0", "1", "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ", 
+               "☿", "☉", "☽", "♃", "♄", "△", "▽", "◇", "○", "●")
+    $width = 50
+    $height = 5
+    
+    Write-Host ""
+    Write-Host "  $Message" -ForegroundColor Magenta
+    Write-Host ""
+    
+    [Console]::CursorVisible = $false
+    $startY = [Console]::CursorTop
+    
+    $iterations = $Duration * 10
+    for ($t = 0; $t -lt $iterations; $t++) {
+        [Console]::SetCursorPosition(2, $startY)
+        
+        for ($y = 0; $y -lt $height; $y++) {
+            $line = ""
+            for ($x = 0; $x -lt $width; $x++) {
+                if ((Get-Random -Maximum 10) -gt 7) {
+                    $line += $chars | Get-Random
+                } else {
+                    $line += " "
+                }
+            }
+            $colors = @("DarkGreen", "Green", "Cyan", "DarkCyan")
+            Write-Host "  $line" -ForegroundColor ($colors | Get-Random)
+        }
+        
+        Start-Sleep -Milliseconds 100
+    }
+    
+    [Console]::SetCursorPosition(0, $startY)
+    for ($y = 0; $y -lt $height; $y++) {
+        Write-Host (" " * ($width + 4))
+    }
+    [Console]::SetCursorPosition(0, $startY)
+    
+    [Console]::CursorVisible = $true
+}
+
+function Show-TrisConfig {
+    $config = $script:TrisConfig
+    if (!$config) { return }
+    
+    Write-Host ""
+    Write-Host "  ╔════════════════════════════════════════════════════════╗" -ForegroundColor DarkCyan
+    Write-Host "  ║  ⚙️  TRISMEGISTUS CONFIGURATION                        ║" -ForegroundColor Cyan
+    Write-Host "  ╠════════════════════════════════════════════════════════╣" -ForegroundColor DarkCyan
+    Write-Host "  ║  Default Provider: " -NoNewline -ForegroundColor DarkCyan
+    Write-Host "$($config.default ?? 'claude')" -NoNewline -ForegroundColor Yellow
+    Write-Host "                             ║" -ForegroundColor DarkCyan
+    Write-Host "  ║  Theme: " -NoNewline -ForegroundColor DarkCyan
+    Write-Host "hermetic" -NoNewline -ForegroundColor Magenta
+    Write-Host "                                        ║" -ForegroundColor DarkCyan
+    Write-Host "  ╚════════════════════════════════════════════════════════╝" -ForegroundColor DarkCyan
+    Write-Host ""
+}
+
+function Show-TrisStats {
+    param([hashtable]$Stats)
+    
+    Write-Host ""
+    Write-Host "  ╭──────────────────────────────────────────────────╮" -ForegroundColor DarkCyan
+    Write-Host "  │  📊 PROJECT STATISTICS                           │" -ForegroundColor Cyan
+    Write-Host "  ├──────────────────────────────────────────────────┤" -ForegroundColor DarkCyan
+    
+    foreach ($key in $Stats.Keys) {
+        $value = $Stats[$key]
+        $padding = 30 - $key.Length - $value.ToString().Length
+        Write-Host "  │  $key : " -NoNewline -ForegroundColor DarkCyan
+        Write-Host "$value" -NoNewline -ForegroundColor Yellow
+        Write-Host "$(" " * $padding)│" -ForegroundColor DarkCyan
+    }
+    
+    Write-Host "  ╰──────────────────────────────────────────────────╯" -ForegroundColor DarkCyan
+    Write-Host ""
+}
+
+function Show-TrisWelcome {
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  Trismegistus v1.1.0 - 'ai-help' for commands" -ForegroundColor Magenta
+        return
+    }
+    
+    Write-Host ""
+    Write-Host "  ⚗️ ════════════════════════════════════════════════════════ ⚗️" -ForegroundColor DarkMagenta
+    Write-Host "     T R I S M E G I S T U S  v1.1.0" -ForegroundColor Magenta
+    Write-Host "     Thrice-Great AI Orchestrator" -ForegroundColor DarkMagenta  
+    Write-Host "  ⚗️ ════════════════════════════════════════════════════════ ⚗️" -ForegroundColor DarkMagenta
+    Write-Host ""
+    Write-Host "     Type " -NoNewline -ForegroundColor DarkGray
+    Write-Host "ai-help" -NoNewline -ForegroundColor Cyan
+    Write-Host " to see all 35 commands" -ForegroundColor DarkGray
+    Write-Host ""
+    
+    Write-TrisQuote -Context "Planning"
+}
+
+function Show-TrisSigil {
+    if (!(Test-UnicodeSupport)) { return }
+    
+    $sigil = @"
+            ╭─────────────────────────────────╮
+        ╭───┤  ☿ MERCURY  ☉ SUN  ☽ MOON      ├───╮
+        │   ├─────────────────────────────────┤   │
+        │   │     ♃ JUPITER    ♄ SATURN      │   │
+        │   ╰─────────────────────────────────╯   │
+        │              ⚗️ ORACLE ⚗️              │
+        ╰─────────────────────────────────────────╯
+"@
+    
+    Write-Host $sigil -ForegroundColor Magenta
+}
+
+function Show-TrisTransmutationCircle {
+    if (!(Test-UnicodeSupport)) { return }
+    
+    $circle = @"
+                    ╭──────── ☉ GOLD ────────╮
+               ╭────┴────╮              ╭────┴────╮
+              │   🜁 AIR  │              │  🜂 FIRE │
+               ╰────┬────╯              ╰────┬────╯
+          ╭─────────┼────────────────────────┼─────────╮
+          │         │     TRANSMUTATION      │         │
+          │         │        CIRCLE          │         │
+          │    ╭────┴────╮              ╭────┴────╮    │
+          │   │  🜃 EARTH │              │ 🜄 WATER │    │
+          │    ╰────┬────╯              ╰────┬────╯    │
+          ╰─────────┴────────────────────────┴─────────╯
+                         ☿ MERCURY ☿
+"@
+    
+    Write-Host $circle -ForegroundColor Cyan
+}
+
+function Show-TrisShipAnimation {
+    if (!(Test-UnicodeSupport)) {
+        Write-Host "  Shipping..." -ForegroundColor Green
+        return
+    }
+    
+    $frames = @(
+        "  🚀                                    ",
+        "       🚀                               ",
+        "            🚀                          ",
+        "                 🚀                     ",
+        "                      🚀                ",
+        "                           🚀           ",
+        "                                🚀      ",
+        "                                     🚀 ",
+        "                                   ✨ 🎉"
+    )
+    
+    Write-Host ""
+    [Console]::CursorVisible = $false
+    
+    foreach ($frame in $frames) {
+        Write-Host "`r$frame" -NoNewline -ForegroundColor Yellow
+        Start-Sleep -Milliseconds 100
+    }
+    
+    [Console]::CursorVisible = $true
+    Write-Host ""
+    Write-Host "  🎉 Successfully shipped! 🎉" -ForegroundColor Green
+    Write-Host ""
+}
+
+function Show-TrisTaskList {
+    param([array]$Tasks)
+    
+    Write-Host ""
+    Write-Host "  ╭────────────────────────────────────────────────────╮" -ForegroundColor DarkCyan
+    Write-Host "  │  📋 TASK PROGRESS                                  │" -ForegroundColor Cyan
+    Write-Host "  ├────────────────────────────────────────────────────┤" -ForegroundColor DarkCyan
+    
+    foreach ($task in $Tasks) {
+        $checkbox = if ($task.Complete) { "✅" } else { "⬜" }
+        $color = if ($task.Complete) { "Green" } else { "White" }
+        $name = $task.Name
+        if ($name.Length -gt 40) { $name = $name.Substring(0, 37) + "..." }
+        $padding = 44 - $name.Length
+        
+        Write-Host "  │  $checkbox " -NoNewline -ForegroundColor DarkCyan
+        Write-Host $name -NoNewline -ForegroundColor $color
+        Write-Host "$(" " * $padding)│" -ForegroundColor DarkCyan
+    }
+    
+    Write-Host "  ╰────────────────────────────────────────────────────╯" -ForegroundColor DarkCyan
+    Write-Host ""
+}
+
+# ============================================================================
+# TYPING EFFECTS
+# ============================================================================
+
+function Write-TrisTyping {
+    param(
+        [string]$Text,
+        [int]$Speed = 50,
+        [string]$Color = "White"
+    )
+    
+    $delay = [math]::Max(10, 1000 / $Speed)
+    
+    foreach ($char in $Text.ToCharArray()) {
+        Write-Host $char -NoNewline -ForegroundColor $Color
+        Start-Sleep -Milliseconds $delay
+    }
+    Write-Host ""
+}
+
+function Write-TrisGradient {
+    param(
+        [string]$Text,
+        [string[]]$Colors = @("DarkMagenta", "Magenta", "Blue", "Cyan", "White")
+    )
+    
+    $chars = $Text.ToCharArray()
+    $colorCount = $Colors.Count
+    
+    for ($i = 0; $i -lt $chars.Count; $i++) {
+        $colorIndex = [math]::Floor(($i / $chars.Count) * $colorCount)
+        Write-Host $chars[$i] -NoNewline -ForegroundColor $Colors[$colorIndex]
+    }
+    Write-Host ""
+}
+
+# ============================================================================
+# EXPORT
+# ============================================================================
+
+Export-ModuleMember -Variable TrisTheme -Function *
