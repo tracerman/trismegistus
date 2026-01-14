@@ -4,7 +4,7 @@
 # ============================================================================
 
 # Version (used for update checking)
-$script:TrisVersion = "1.2.2"
+$script:TrisVersion = "1.2.3"
 
 $script:TrisTheme = @{
     Name = "hermetic"
@@ -253,9 +253,6 @@ function Show-TrisOracle {
 # DISPLAY HELPERS
 # ============================================================================
 
-function Show-TrisConfig {
-    # Stub - actual implementation in config.ps1
-}
 
 function Show-TrisStats {
     param([hashtable]$Stats)
