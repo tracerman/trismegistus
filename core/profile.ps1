@@ -2395,8 +2395,8 @@ function Get-TrisLatestVersion {
         Fetch latest release version from GitHub
     #>
     try {
-        $releases = Invoke-RestMethod "https://api.github.com/repos/tracerman/trismegistus/releases/latest" -TimeoutSec 5
-        return $releases.tag_name -replace '^v', ''
+        $release = Invoke-RestMethod "https://api.github.com/repos/tracerman/trismegistus/releases/latest" -TimeoutSec 5
+        return $release.tag_name -replace '^v', ''
     } catch {
         return $null
     }
@@ -2582,8 +2582,8 @@ if ($shouldCheck) {
     Start-Job -ScriptBlock {
         param($root, $version)
         try {
-            $releases = Invoke-RestMethod "https://api.github.com/repos/tracerman/trismegistus/releases/latest" -TimeoutSec 3
-            $latest = $releases.tag_name -replace '^v', ''
+            $release = Invoke-RestMethod "https://api.github.com/repos/tracerman/trismegistus/releases/latest" -TimeoutSec 3
+            $latest = $release.tag_name -replace '^v', ''
             if ([version]$latest -gt [version]$version) {
                 "UPDATE_AVAILABLE:$latest" | Set-Content (Join-Path $root ".update-check")
             } else {

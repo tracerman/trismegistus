@@ -4,7 +4,7 @@
 # ============================================================================
 
 # Version (used for update checking)
-$script:TrisVersion = "1.2.3"
+$script:TrisVersion = "1.2.4"
 
 $script:TrisTheme = @{
     Name = "hermetic"
