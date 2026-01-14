@@ -38,3 +38,7 @@ logs/
 .claude/active/
 .claude/metrics/
 .claude/commit_msg.txt
+
+# Don't commit dev workspace when working on Trismegistus itself
+/.tris/
+/.claude/

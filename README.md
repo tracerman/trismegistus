@@ -122,7 +122,7 @@ ai-setup
 | `ai-research <topic>` | Deep research, save to reference/ |
 | `ai-architect <problem>` | Tree of Thoughts design |
 | `ai-plan <task>` | Create an execution plan |
-| `ai-verify` | Hostile review of the plan |
+| `ai-verify` | Critical review of the plan |
 | `ai-split` | Break large plan into phases |
 
 ### Phase 2: Execute
@@ -141,7 +141,7 @@ ai-setup
 |---------|-------------|
 | `ai-diff` | Show changes summary |
 | `ai-test` | Run tests, analyze failures |
-| `ai-review` | Hostile code review |
+| `ai-review` | Critical code review |
 | `ai-explain <file>` | Explain code in detail |
 | `ai-context` | Debug what AI sees |
 

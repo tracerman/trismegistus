@@ -5,6 +5,43 @@ All notable changes to Trismegistus will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2025-01-14
+
+### Added
+
+- **ai-update**: New command to check for and install updates from GitHub releases
+  - `ai-update -Check` - Check without installing
+  - `ai-update -Force` - Install without confirmation
+  - Backs up config.json during updates
+- **Auto-update notification**: Silent background check on startup (cached 24h)
+  - Shows "⚗ Update available: vX.X.X (run 'ai-update')" when new version detected
+- **Version variable**: `$script:TrisVersion` for programmatic version access
+
+### Changed
+
+- **Terminology refinement**: "Hostile" → "Critical" throughout codebase
+  - `ai-verify` now described as "Critical review" (was "Hostile review")
+  - `ai-review` now described as "Critical code review" (was "Hostile code review")
+  - All prompts updated to use professional language
+- **Message types simplified**: Consolidated ~15 mystical terms to professional equivalents
+  - ORACLE → QUERY, FORGE → BUILD, SCRIBE → INFO, VOID → ERROR, etc.
+- **Message text refined**: ~40 mystical phrases updated to professional language
+  - "Consulting the Oracle" → "Querying AI"
+  - "Opening the portal" → "Starting AI session"
+  - "The Great Work begins" → "Execution starting"
+- **Help border simplified**: Fancy box drawing replaced with clean underline
+- **Animation stubs renamed**: `Show-TrisAlchemy` → `Show-TrisProcessing`, etc.
+- **Empty stubs removed**: `Show-TrisSigil`, `Show-TrisTransmutationCircle`, etc.
+- **Command count**: Now 36 commands (was 35)
+
+### Documentation
+
+- Updated README.md, CHANGELOG.md, WORKFLOWS.md, CONFIGURATION.md
+- Updated code-review.md template
+- All "hostile" references changed to "critical"
+
+---
+
 ## [1.2.1] - 2025-01-13
 
 ### Fixed
@@ -34,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **Validation & Review:**
 - `ai-diff` - Human-readable summary of changes since last commit
 - `ai-test` - Run tests, analyze failures, suggest fixes (auto-detects framework)
-- `ai-review` - Hostile code review of actual changes (not just the plan)
+- `ai-review` - Critical code review of actual changes (not just the plan)
 - `ai-context` - Debug view of what gets injected into prompts
 - `ai-explain <file>` - Explain what a file or function does
 
@@ -143,7 +180,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ai-init` - Initialize project structure
   - `ai-plan` - Create execution plans with context injection
   - `ai-exec` - Execute plans with checkpointing
-  - `ai-verify` - Hostile code review / reflexion loop
+  - `ai-verify` - Critical code review / reflexion loop
   - `ai-commit` - Safe commits with preview and branch protection
   - `ai-finish` - Archive completed work and extract lessons
 - **Advanced Commands**:

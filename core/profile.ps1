@@ -1,11 +1,8 @@
 # ============================================================================
-#  T R I S M E G I S T U S
-#  "Thrice-Great" - Multi-Oracle Agentic Orchestrator
-#  
-#  Version: 1.2.1
-#  Author: Transmuted from Claude God Mode
-#  
-#  "As above, so below; as within, so without." - The Emerald Tablet
+#  TRISMEGISTUS
+#  Multi-Oracle AI Orchestrator
+#
+#  Version: 1.2.2
 # ============================================================================
 
 # ============================================================================
@@ -223,7 +220,7 @@ function Test-LessonsSize {
     if (Test-Path $lessonsPath) {
         $lines = (Get-Content $lessonsPath).Count
         if ($lines -gt $threshold) {
-            Write-TrisMessage "WARD" "lessons.md has $lines lines. Consider running 'ai-compress'."
+            Write-TrisMessage "WARNING" "lessons.md has $lines lines. Consider running 'ai-compress'."
         }
     }
 }
@@ -237,10 +234,10 @@ function ai-init {
     .SYNOPSIS
         Initialize Trismegistus in a project directory
     #>
-    Write-TrisMessage "INIT" "Initializing the Sacred Geometry..."
-    
-    # Show the transmutation circle
-    Show-TrisTransmutationCircle
+    Write-TrisMessage "RUN" "Initializing project..."
+
+    # Show processing indicator
+    Show-TrisProcessing "Setting up structure..."
     
     # Determine context folder (uses .tris for new, respects existing .claude)
     $ctx = Get-ContextFolder
@@ -299,7 +296,7 @@ function ai-init {
     # Update .gitignore
     ai-ignore
     
-    Write-TrisMessage "COMPLETE" "Sacred space prepared. The Work may begin."
+    Write-TrisMessage "DONE" "Project initialized. Ready to begin."
     Write-TrisMessage "INFO" "Next: Edit $ctx/CLAUDE.md and $ctx/active/prd.md"
 }
 
@@ -317,7 +314,7 @@ function ai-plan {
         [string]$Provider = $null
     )
     
-    Write-TrisMessage "DESIGN" "Consulting the Oracle..."
+    Write-TrisMessage "PLAN" "Analyzing task..."
     
     # Get context folder
     $ctx = Get-ContextFolder
@@ -348,7 +345,7 @@ function ai-plan {
     # Construct the prompt
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Provider: $($Provider ?? $script:Config.default ?? "claude")
 - Capability: Deep Reasoning & Massive Context
 - OS: $($IsWindows ? "Windows" : ($IsMacOS ? "macOS" : "Linux"))
@@ -381,7 +378,7 @@ $Task
 INSTRUCTIONS:
 1. PHASE 1: ANALYSIS - Map dependencies and required changes.
 2. PHASE 2: DRAFT - Create mental draft of execution plan.
-3. PHASE 3: HOSTILE CRITIQUE - Attack your own draft. Ask: "Where will this break?"
+3. PHASE 3: CRITICAL REVIEW - Critique your own draft. Ask: "Where will this break?"
 4. PHASE 4: OUTPUT - Generate the corrected plan to '$ctx/active/plan.md'.
 
 STRICT CONSTRAINT: Do NOT implement code yet. ONLY create the plan.md file.
@@ -389,13 +386,13 @@ STRICT CONSTRAINT: Do NOT implement code yet. ONLY create the plan.md file.
 
     # Invoke the oracle
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "SCRIBE" "Invocation inscribed. Opening the portal..."
+    Write-TrisMessage "RUN" "Prompt prepared. Starting AI session..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-plan" -Provider $Provider -Interactive
     
     # Open plan for review
     if (Test-Path "$ctx/active/plan.md") {
-        Write-TrisMessage "REVEAL" "The plan has been revealed."
+        Write-TrisMessage "DONE" "Plan created."
         if (Get-Command code -ErrorAction SilentlyContinue) {
             code "$ctx/active/plan.md"
         }
@@ -416,18 +413,18 @@ function ai-exec {
         [string]$Provider = $null
     )
     
-    Write-TrisMessage "FORGE" "Preparing to transmute code..."
+    Write-TrisMessage "BUILD" "Preparing to execute plan..."
     
     $ctx = Get-ContextFolder
     $planPath = "$ctx/active/plan.md"
     if (!(Test-Path $planPath)) {
-        Write-TrisMessage "VOID" "No plan found. Run 'ai-plan' first."
+        Write-TrisMessage "ERROR" "No plan found. Run 'ai-plan' first."
         return
     }
     
     # Stash current work as checkpoint
     if (!$Resume) {
-        Write-TrisMessage "WARD" "Creating safety checkpoint..."
+        Write-TrisMessage "INFO" "Creating safety checkpoint..."
         git stash push -m "trismegistus-checkpoint-$(Get-Date -Format 'yyyyMMdd-HHmmss')" 2>$null
     }
     
@@ -450,7 +447,7 @@ function ai-exec {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: EXECUTION
 - Provider: $($Provider ?? $script:Config.default ?? "claude")
 
@@ -479,10 +476,10 @@ This file is REQUIRED for the commit process.
 
     Set-Clipboard -Value $prompt
     
-    # Show alchemy transmutation animation
-    Show-TrisAlchemy
-    
-    Write-TrisMessage "SCRIBE" "The Great Work begins. Opening portal..."
+    # Show processing indicator
+    Show-TrisProcessing "Preparing execution context..."
+
+    Write-TrisMessage "RUN" "Execution starting. Opening AI session..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-exec" -Provider $Provider -Interactive
 }
@@ -490,14 +487,14 @@ This file is REQUIRED for the commit process.
 function ai-verify {
     <#
     .SYNOPSIS
-        Hostile review of the current plan
+        Critical review of the current plan
     #>
-    Write-TrisMessage "JUDGE" "Summoning the Hostile Critic..."
+    Write-TrisMessage "REVIEW" "Starting critical review..."
     
     $ctx = Get-ContextFolder
     $planPath = "$ctx/active/plan.md"
     if (!(Test-Path $planPath)) {
-        Write-TrisMessage "VOID" "No plan to verify."
+        Write-TrisMessage "ERROR" "No plan to verify."
         return
     }
     
@@ -505,9 +502,9 @@ function ai-verify {
     $lessons = Get-Content "$ctx/memory/lessons.md" -Raw -ErrorAction SilentlyContinue
     
     $prompt = @"
-TASK: HOSTILE CRITIQUE & REFLEXION
+TASK: CRITICAL REVIEW
 
-You are a Hostile Senior Staff Engineer. Your job is to DESTROY this plan.
+You are a Senior Staff Engineer conducting a critical review. Your job is to find flaws in this plan.
 
 PAST MISTAKES (Do not allow these to recur):
 $lessons
@@ -527,10 +524,10 @@ Be ruthless. Better to catch issues now than in production.
 
     Set-Clipboard -Value $prompt
     
-    # Show thinking animation
-    Show-TrisThinking -Duration 1 -Message "The Critic scrutinizes the plan..."
-    
-    Write-TrisMessage "SCRIBE" "The trial begins..."
+    # Show waiting indicator
+    Show-TrisWaiting -Duration 1 -Message "Analyzing plan..."
+
+    Write-TrisMessage "RUN" "Review starting..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-verify" -Interactive
 }
@@ -552,7 +549,7 @@ function ai-commit {
         [switch]$Force
     )
     
-    Write-TrisMessage "COMMIT" "Preparing to seal the changes..."
+    Write-TrisMessage "COMMIT" "Preparing to commit..."
     
     $ctx = Get-ContextFolder
     
@@ -562,12 +559,12 @@ function ai-commit {
     # Check for changes
     $status = git status --porcelain
     if ([string]::IsNullOrWhiteSpace($status)) {
-        Write-TrisMessage "VOID" "Nothing to commit. The slate is clean."
+        Write-TrisMessage "INFO" "Nothing to commit. Working tree clean."
         return
     }
     
     # Show preview
-    Write-TrisMessage "REVEAL" "Changes to be committed:"
+    Write-TrisMessage "INFO" "Changes to be committed:"
     git diff --stat HEAD
     Write-Host ""
     
@@ -594,12 +591,12 @@ function ai-commit {
     
     if (Test-Path $msgFile) {
         $msg = (Get-Content $msgFile -Raw).Trim()
-        Write-TrisMessage "SCRIBE" "Using generated message: '$msg'"
+        Write-TrisMessage "INFO" "Using generated message: '$msg'"
     } else {
-        Write-TrisMessage "ORACLE" "No message found. Enter commit message:"
+        Write-TrisMessage "QUERY" "No message found. Enter commit message:"
         $msg = Read-Host "> "
         if ([string]::IsNullOrWhiteSpace($msg)) {
-            Write-TrisMessage "VOID" "No message provided. Aborting."
+            Write-TrisMessage "ERROR" "No message provided. Aborting."
             return
         }
     }
@@ -612,14 +609,14 @@ function ai-commit {
         Remove-Item $msgFile -ErrorAction SilentlyContinue
         
         if (!$NoPush) {
-            Write-TrisMessage "PUSH" "Ascending to the remote repository..."
+            Write-TrisMessage "COMMIT" "Pushing to remote..."
             git push
-            
+
             if ($LASTEXITCODE -eq 0) {
-                Write-TrisMessage "TRIUMPH" "The changes have been sealed and ascended."
+                Write-TrisMessage "DONE" "Changes committed and pushed."
             }
         } else {
-            Write-TrisMessage "COMPLETE" "Changes committed locally."
+            Write-TrisMessage "DONE" "Changes committed locally."
         }
         
         # Record metric
@@ -640,12 +637,12 @@ function ai-finish {
     .SYNOPSIS
         Archive completed plan and extract lessons
     #>
-    Write-TrisMessage "SEAL" "Completing the Great Work..."
+    Write-TrisMessage "RUN" "Archiving completed plan..."
     
     $ctx = Get-ContextFolder
     $planPath = "$ctx/active/plan.md"
     if (!(Test-Path $planPath)) {
-        Write-TrisMessage "VOID" "No active plan to finish."
+        Write-TrisMessage "ERROR" "No active plan to finish."
         return
     }
     
@@ -661,7 +658,7 @@ function ai-finish {
     "`n## [$date] Mission Complete`n$plan`n---" | Add-Content $logPath -Encoding UTF8
     
     # Extract lessons
-    Write-TrisMessage "WISDOM" "Extracting lessons from this work..."
+    Write-TrisMessage "INFO" "Extracting lessons..."
     
     $prompt = @"
 TASK: POST-MORTEM ANALYSIS
@@ -691,8 +688,7 @@ Be concise. Focus on reusable wisdom.
     # Show completion celebration
     Show-TrisPhaseComplete -Phase 0 -Message "Mission archived!"
     
-    Write-TrisMessage "COMPLETE" "The cycle is complete. Ready for the next Work."
-    Write-TrisQuote -Context "Success"
+    Write-TrisMessage "DONE" "Complete. Ready for next task."
 }
 
 # ============================================================================
@@ -708,10 +704,10 @@ function ai-architect {
     #>
     param([Parameter(Mandatory)][string]$Problem)
     
-    Write-TrisMessage "VISION" "Invoking the Council of Three..."
-    
-    # Show the mystical sigil
-    Show-TrisSigil
+    Write-TrisMessage "PLAN" "Starting architecture session..."
+
+    # Show processing indicator
+    Show-TrisProcessing "Preparing multi-perspective analysis..."
     
     $ctx = Get-ContextFolder
     
@@ -735,7 +731,7 @@ Include diagrams (ASCII or Mermaid) where helpful.
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "ORACLE" "The Council convenes..."
+    Write-TrisMessage "QUERY" "Architects analyzing..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-architect" -Interactive
 }
@@ -749,7 +745,7 @@ function ai-hotfix {
     #>
     param([Parameter(Mandatory)][string]$Issue)
     
-    Write-TrisMessage "FORGE" "Emergency transmutation initiated!"
+    Write-TrisMessage "BUILD" "Emergency fix started!"
     
     $ctx = Get-ContextFolder
     $context = Get-CoreContext
@@ -788,22 +784,22 @@ function ai-rollback {
     .SYNOPSIS
         Rollback to last checkpoint
     #>
-    Write-TrisMessage "SYNC" "Seeking the last checkpoint..."
-    
+    Write-TrisMessage "SYNC" "Finding checkpoints..."
+
     $stashes = git stash list | Where-Object { $_ -match "trismegistus-checkpoint" }
-    
+
     if (!$stashes) {
-        Write-TrisMessage "VOID" "No checkpoints found."
+        Write-TrisMessage "ERROR" "No checkpoints found."
         return
     }
     
-    Write-TrisMessage "REVEAL" "Available checkpoints:"
+    Write-TrisMessage "INFO" "Available checkpoints:"
     git stash list | Where-Object { $_ -match "trismegistus-checkpoint" }
-    
+
     $confirm = Read-Host "`nApply most recent checkpoint? (yes/no)"
     if ($confirm -eq "yes") {
         git stash pop
-        Write-TrisMessage "COMPLETE" "Rolled back to checkpoint."
+        Write-TrisMessage "DONE" "Rolled back to checkpoint."
     }
 }
 
@@ -820,7 +816,7 @@ function ai-ask {
     #>
     param([Parameter(Mandatory)][string]$Question)
     
-    Write-TrisMessage "ORACLE" "Consulting the Oracle..."
+    Write-TrisMessage "QUERY" "Querying AI..."
     
     $map = Get-ProjectMap -MaxFiles 1000
     
@@ -847,7 +843,7 @@ function ai-debug {
     .SYNOPSIS
         Debug an error from clipboard
     #>
-    Write-TrisMessage "TRANSMUTE" "Analyzing the disturbance..."
+    Write-TrisMessage "RUN" "Analyzing error..."
     
     $ctx = Get-ContextFolder
     $error = Get-Clipboard
@@ -896,7 +892,7 @@ function ai-evolve {
     }
     
     $entry | Add-Content $lessonsPath -Encoding UTF8
-    Write-TrisMessage "MEMORY" "Wisdom recorded: $Lesson"
+    Write-TrisMessage "DONE" "Lesson recorded: $Lesson"
 }
 
 function ai-status {
@@ -912,10 +908,10 @@ function ai-status {
     $planPath = "$ctx/active/plan.md"
     if (Test-Path $planPath) {
         $planLines = (Get-Content $planPath).Count
-        Write-TrisMessage "STATUS" "Active Plan: $planLines lines"
+        Write-TrisMessage "INFO" "Active Plan: $planLines lines"
         Get-Content $planPath | Select-Object -First 5 | ForEach-Object { Write-Host "    $_" -ForegroundColor Gray }
     } else {
-        Write-TrisMessage "VOID" "No active plan"
+        Write-TrisMessage "INFO" "No active plan"
     }
     
     Write-Host ""
@@ -923,19 +919,19 @@ function ai-status {
     # Progress
     $progressPath = "$ctx/active/progress.txt"
     if (Test-Path $progressPath) {
-        Write-TrisMessage "STATUS" "Progress checkpoint exists"
+        Write-TrisMessage "INFO" "Progress checkpoint exists"
     }
     
     # Lessons count
     $lessonsPath = "$ctx/memory/lessons.md"
     if (Test-Path $lessonsPath) {
         $lessonCount = (Get-Content $lessonsPath | Where-Object { $_ -match "^\s*-" }).Count
-        Write-TrisMessage "MEMORY" "Lessons recorded: $lessonCount"
+        Write-TrisMessage "INFO" "Lessons recorded: $lessonCount"
     }
     
     # Git status
     Write-Host ""
-    Write-TrisMessage "BRANCH" "Git Status:"
+    Write-TrisMessage "INFO" "Git Status:"
     git status --short | ForEach-Object { Write-Host "    $_" -ForegroundColor Gray }
     
     # Pending commit message
@@ -955,9 +951,8 @@ function ai-help {
     
     $commands = @"
 
-  ╔═══════════════════════════════════════════════════════════════╗
-  ║  TRISMEGISTUS COMMAND REFERENCE  (35 commands)                ║
-  ╚═══════════════════════════════════════════════════════════════╝
+  TRISMEGISTUS COMMAND REFERENCE (36 commands)
+  ─────────────────────────────────────────────
 
   PHASE 1: PLAN
   ─────────────────────────────────────────────────────────────────
@@ -966,7 +961,7 @@ function ai-help {
   ai-research <topic>         Deep research → saves to reference/
   ai-architect <problem>      Tree of Thoughts design session
   ai-plan <task>              Create detailed execution plan
-  ai-verify                   Hostile review of plan
+  ai-verify                   Critical review of plan
   ai-split [-Phases N]        Break oversized plan into phases
 
   PHASE 2: EXECUTE
@@ -1007,6 +1002,7 @@ function ai-help {
   ai-setup                    First-time configuration wizard
   ai-config                   Show/modify configuration
   ai-providers                List available AI providers
+  ai-update                   Check for and install updates
   ai-help                     Show this help
 
   PIPELINES (Automated Workflows)
@@ -1047,11 +1043,11 @@ $ctx/commit_msg.txt
         $current = Get-Content .gitignore -Raw
         if ($current -notmatch "TRISMEGISTUS") {
             Add-Content .gitignore $rules
-            Write-TrisMessage "SEAL" "Updated .gitignore"
+            Write-TrisMessage "DONE" "Updated .gitignore"
         }
     } else {
         Set-Content .gitignore $rules
-        Write-TrisMessage "SEAL" "Created .gitignore"
+        Write-TrisMessage "DONE" "Created .gitignore"
     }
 }
 
@@ -1060,7 +1056,7 @@ function ai-compress {
     .SYNOPSIS
         Compress lessons.md by consolidating
     #>
-    Write-TrisMessage "TRANSMUTE" "Compressing the wisdom..."
+    Write-TrisMessage "RUN" "Compressing lessons..."
     
     $ctx = Get-ContextFolder
     $lessons = Get-Content "$ctx/memory/lessons.md" -Raw -ErrorAction SilentlyContinue
@@ -1091,11 +1087,11 @@ function ai-wipe {
     $ctx = Get-ContextFolder
     if (Test-Path "$ctx/active/plan.md") {
         Clear-Content "$ctx/active/plan.md"
-        Write-TrisMessage "VOID" "Active plan cleared."
+        Write-TrisMessage "DONE" "Active plan cleared."
     }
     if (Test-Path "$ctx/active/progress.txt") {
         Remove-Item "$ctx/active/progress.txt"
-        Write-TrisMessage "VOID" "Progress cleared."
+        Write-TrisMessage "DONE" "Progress cleared."
     }
 }
 
@@ -1117,18 +1113,18 @@ function ai-progress {
     $planPath = "$ctx/active/plan.md"
     
     if (!(Test-Path $planPath)) {
-        Write-TrisMessage "VOID" "No active plan. Run 'ai-plan' first."
+        Write-TrisMessage "ERROR" "No active plan. Run 'ai-plan' first."
         return
     }
-    
+
     Write-TrisBanner -Mini
     Write-Host ""
-    
+
     $plan = Get-Content $planPath -Raw -ErrorAction SilentlyContinue
-    
+
     # Handle empty or null plan
     if ([string]::IsNullOrWhiteSpace($plan)) {
-        Write-TrisMessage "VOID" "Plan file is empty. Run 'ai-plan' to create one."
+        Write-TrisMessage "ERROR" "Plan file is empty. Run 'ai-plan' to create one."
         return
     }
     
@@ -1164,7 +1160,7 @@ function ai-progress {
             $taskNum++
         }
     } else {
-        Write-TrisMessage "REVEAL" "Phase Breakdown:"
+        Write-TrisMessage "INFO" "Phase Breakdown:"
         Write-Host ""
         
         for ($i = 0; $i -lt $phases.Count; $i++) {
@@ -1216,7 +1212,7 @@ function ai-progress {
     if ($allIncomplete -gt 0) {
         Write-TrisMessage "INFO" "Run 'ai-continue' to execute next incomplete phase"
     } elseif ($allCompleted -gt 0) {
-        Write-TrisMessage "COMPLETE" "All tasks complete! Run 'ai-finish' to archive"
+        Write-TrisMessage "DONE" "All tasks complete! Run 'ai-finish' to archive"
     }
 }
 
@@ -1241,10 +1237,10 @@ function ai-continue {
     $planPath = "$ctx/active/plan.md"
     
     if (!(Test-Path $planPath)) {
-        Write-TrisMessage "VOID" "No active plan. Run 'ai-plan' first."
+        Write-TrisMessage "ERROR" "No active plan. Run 'ai-plan' first."
         return
     }
-    
+
     Write-TrisMessage "SYNC" "Analyzing plan progress..."
     
     $plan = Get-Content $planPath -Raw
@@ -1282,13 +1278,13 @@ function ai-continue {
         $remaining = ([regex]::Matches($plan, '\[ \]')).Count
         if ($remaining -eq 0) {
             Show-TrisSuccess -Message "All phases done!"
-            Write-TrisMessage "COMPLETE" "All phases appear complete! Run 'ai-finish' to archive."
+            Write-TrisMessage "DONE" "All phases appear complete! Run 'ai-finish' to archive."
             return
         }
         $targetPhase = 1  # Default to phase 1 if no phases detected
     }
     
-    Write-TrisMessage "CONTINUE" "Continuing with Phase $targetPhase..."
+    Write-TrisMessage "RUN" "Continuing with Phase $targetPhase..."
     if ($targetPhaseName) {
         Write-Host "    $targetPhaseName" -ForegroundColor Cyan
     }
@@ -1307,7 +1303,7 @@ function ai-continue {
     # Build continuation prompt
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: CONTINUATION (Resuming interrupted work)
 - Target: Phase $targetPhase
 
@@ -1347,7 +1343,7 @@ When Phase $targetPhase is complete, create '$ctx/commit_msg.txt' containing:
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "SCRIBE" "Continuation context prepared. Opening portal..."
+    Write-TrisMessage "RUN" "Context prepared. Starting AI session..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-continue" -Provider $Provider -Interactive
 }
@@ -1368,12 +1364,12 @@ function ai-diff {
     #>
     param([switch]$Detailed)
     
-    Write-TrisMessage "DIFF" "Analyzing changes..."
+    Write-TrisMessage "INFO" "Analyzing changes..."
     Write-Host ""
-    
+
     # Check if we're in a git repo
     if (!(Test-Path ".git")) {
-        Write-TrisMessage "VOID" "Not a git repository."
+        Write-TrisMessage "ERROR" "Not a git repository."
         return
     }
     
@@ -1396,7 +1392,7 @@ function ai-diff {
     Show-TrisDiff -Added $additions -Removed $deletions -Files $filesChanged
     
     # List changed files
-    Write-TrisMessage "REVEAL" "Changed files:"
+    Write-TrisMessage "INFO" "Changed files:"
     $changedFiles = git diff --name-status HEAD 2>$null
     $changedFiles -split "`n" | Where-Object { $_ } | ForEach-Object {
         $parts = $_ -split "`t"
@@ -1480,13 +1476,13 @@ function ai-test {
     }
     
     if (!$testCmd) {
-        Write-TrisMessage "VOID" "Could not detect test framework."
+        Write-TrisMessage "ERROR" "Could not detect test framework."
         Write-TrisMessage "INFO" "Supported: npm, pytest, cargo, go, dotnet"
         return
     }
     
     Write-TrisMessage "INFO" "Framework: $framework"
-    Write-TrisMessage "FORGE" "Running: $testCmd"
+    Write-TrisMessage "BUILD" "Running: $testCmd"
     Write-Host ""
     
     # Run tests and capture output
@@ -1497,13 +1493,13 @@ function ai-test {
     
     if ($exitCode -eq 0) {
         Show-TrisSuccess -Message "Tests passed!"
-        Write-TrisMessage "COMPLETE" "All tests passed!"
+        Write-TrisMessage "DONE" "All tests passed!"
         return
     }
     
     # Tests failed - analyze
     Write-Host ""
-    Write-TrisMessage "CHAOS" "Tests failed! Analyzing..."
+    Write-TrisMessage "ERROR" "Tests failed! Analyzing..."
     Write-Host ""
     
     $ctx = Get-ContextFolder
@@ -1511,7 +1507,7 @@ function ai-test {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: TEST ANALYSIS
 - Framework: $framework
 
@@ -1542,7 +1538,7 @@ $(if ($Fix) { "   - Implement the fixes directly
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "ORACLE" "Consulting oracle about failures..."
+    Write-TrisMessage "QUERY" "Analyzing failures..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-test" -Provider $Provider -Interactive
 }
@@ -1568,7 +1564,7 @@ function ai-review {
     $diff = git diff HEAD 2>$null
     
     if ([string]::IsNullOrWhiteSpace($diff)) {
-        Write-TrisMessage "VOID" "No changes to review."
+        Write-TrisMessage "INFO" "No changes to review."
         return
     }
     
@@ -1590,8 +1586,8 @@ function ai-review {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
-- Mode: CODE REVIEW (Hostile Reviewer)
+- Orchestrator: Trismegistus v1.2.2
+- Mode: CODE REVIEW (Critical Reviewer)
 
 PROJECT RULES:
 $($context.rules)
@@ -1607,7 +1603,7 @@ $($fileContents -join "`n")
 
 CODE REVIEW INSTRUCTIONS:
 ═══════════════════════════════════════════════════════════════
-You are a HOSTILE CODE REVIEWER. Your job is to find problems.
+You are a CRITICAL CODE REVIEWER. Your job is to find problems.
 
 Review Categories:
 1. 🔴 CRITICAL - Bugs, security issues, data loss risks
@@ -1631,7 +1627,7 @@ Be thorough but fair. Not every diff needs changes.
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "JUDGE" "Submitting for hostile review..."
+    Write-TrisMessage "REVIEW" "Starting code review..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-review" -Provider $Provider -Interactive
 }
@@ -1650,7 +1646,7 @@ function ai-context {
     
     Write-TrisBanner -Mini
     Write-Host ""
-    Write-TrisMessage "CONTEXT" "Debug: What the AI sees"
+    Write-TrisMessage "INFO" "Debug: What the AI sees"
     Write-Host ""
     
     $ctx = Get-ContextFolder
@@ -1741,11 +1737,11 @@ function ai-explain {
     )
     
     if (!(Test-Path $Path)) {
-        Write-TrisMessage "VOID" "File not found: $Path"
+        Write-TrisMessage "ERROR" "File not found: $Path"
         return
     }
     
-    Write-TrisMessage "EXPLAIN" "Analyzing: $Path"
+    Write-TrisMessage "INFO" "Analyzing: $Path"
     
     $content = Get-Content $Path -Raw
     $ctx = Get-ContextFolder
@@ -1758,7 +1754,7 @@ function ai-explain {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: CODE EXPLANATION
 
 PROJECT CONTEXT:
@@ -1821,7 +1817,7 @@ function ai-docs {
         [string]$Provider = $null
     )
     
-    Write-TrisMessage "DOCS" "Analyzing project for documentation..."
+    Write-TrisMessage "RUN" "Analyzing project for documentation..."
     
     $ctx = Get-ContextFolder
     $context = Get-CoreContext
@@ -1838,7 +1834,7 @@ function ai-docs {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: DOCUMENTATION GENERATION
 - Type: $Type
 
@@ -1888,7 +1884,7 @@ Write documentation that is:
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "SCRIBE" "Generating documentation..."
+    Write-TrisMessage "RUN" "Generating documentation..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-docs" -Provider $Provider -Interactive
 }
@@ -1911,7 +1907,7 @@ function ai-research {
         [string]$Provider = $null
     )
     
-    Write-TrisMessage "RESEARCH" "Researching: $Topic"
+    Write-TrisMessage "RUN" "Researching: $Topic"
     
     $ctx = Get-ContextFolder
     $safeTopic = $Topic -replace '[^a-zA-Z0-9\-_]', '-'
@@ -1926,7 +1922,7 @@ function ai-research {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1  
+- Orchestrator: Trismegistus v1.2.2  
 - Mode: DEEP RESEARCH
 - Topic: $Topic
 
@@ -1971,12 +1967,12 @@ Format as clean Markdown for future reference.
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "ORACLE" "Consulting the oracle..."
-    
+    Write-TrisMessage "QUERY" "Querying AI..."
+
     Invoke-Oracle -Prompt $prompt -CommandName "ai-research" -Provider $Provider -Interactive
-    
+
     if (Test-Path $outputPath) {
-        Write-TrisMessage "MANIFEST" "Research saved to: $outputPath"
+        Write-TrisMessage "DONE" "Research saved to: $outputPath"
     }
 }
 
@@ -2005,7 +2001,7 @@ function ai-estimate {
         [string]$Provider = $null
     )
     
-    Write-TrisMessage "ESTIMATE" "Analyzing complexity..."
+    Write-TrisMessage "RUN" "Analyzing complexity..."
     
     $ctx = Get-ContextFolder
     $context = Get-CoreContext
@@ -2017,7 +2013,7 @@ function ai-estimate {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: COMPLEXITY ESTIMATION
 
 PROJECT STRUCTURE:
@@ -2088,11 +2084,11 @@ function ai-split {
     $planPath = "$ctx/active/plan.md"
     
     if (!(Test-Path $planPath)) {
-        Write-TrisMessage "VOID" "No active plan to split."
+        Write-TrisMessage "ERROR" "No active plan to split."
         return
     }
     
-    Write-TrisMessage "SPLIT" "Analyzing plan for restructuring..."
+    Write-TrisMessage "RUN" "Analyzing plan for restructuring..."
     
     $plan = Get-Content $planPath -Raw
     $context = Get-CoreContext
@@ -2104,7 +2100,7 @@ function ai-split {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: PLAN RESTRUCTURING
 $phaseHint
 
@@ -2150,7 +2146,7 @@ Validation: [How to verify phase is complete]
 "@
 
     Set-Clipboard -Value $prompt
-    Write-TrisMessage "ORACLE" "Consulting oracle for restructuring..."
+    Write-TrisMessage "QUERY" "Analyzing for restructuring..."
     
     Invoke-Oracle -Prompt $prompt -CommandName "ai-split" -Provider $Provider -Interactive
 }
@@ -2176,7 +2172,7 @@ function ai-changelog {
         [string]$Provider = $null
     )
     
-    Write-TrisMessage "CHANGELOG" "Analyzing git history..."
+    Write-TrisMessage "RUN" "Analyzing git history..."
     
     # Get commit history
     $commits = git log "$Since..HEAD" --oneline 2>$null | Out-String
@@ -2184,7 +2180,7 @@ function ai-changelog {
     $diffStat = git diff --stat "$Since" HEAD 2>$null | Out-String
     
     if ([string]::IsNullOrWhiteSpace($commits)) {
-        Write-TrisMessage "VOID" "No commits found since $Since"
+        Write-TrisMessage "INFO" "No commits found since $Since"
         return
     }
     
@@ -2192,7 +2188,7 @@ function ai-changelog {
     
     $prompt = @"
 SYSTEM CONTEXT:
-- Orchestrator: Trismegistus v1.2.1
+- Orchestrator: Trismegistus v1.2.2
 - Mode: CHANGELOG GENERATION
 
 COMMITS SINCE $Since`:
@@ -2258,7 +2254,7 @@ function ai-ship {
     
     Write-TrisBanner -Mini
     Write-Host ""
-    Write-TrisMessage "SHIP" "Starting shipping pipeline..."
+    Write-TrisMessage "RUN" "Starting shipping pipeline..."
     Write-Host ""
     
     # Phase 1: Diff
@@ -2268,7 +2264,7 @@ function ai-ship {
     
     $diff = git diff --shortstat HEAD 2>$null
     if ([string]::IsNullOrWhiteSpace($diff)) {
-        Write-TrisMessage "VOID" "No changes to ship."
+        Write-TrisMessage "INFO" "No changes to ship."
         return
     }
     
@@ -2374,7 +2370,7 @@ function ai-providers {
     .SYNOPSIS
         List available AI providers
     #>
-    Write-TrisMessage "REVEAL" "Available Oracles:"
+    Write-TrisMessage "INFO" "Available Providers:"
     Write-Host ""
     
     $providers = Get-AvailableProviders
@@ -2387,6 +2383,130 @@ function ai-providers {
     
     Write-Host ""
     Write-TrisMessage "INFO" "Enable providers with: ai-config set providers.<name>.enabled true"
+}
+
+# ============================================================================
+# UPDATE COMMANDS
+# ============================================================================
+
+function Get-TrisLatestVersion {
+    <#
+    .SYNOPSIS
+        Fetch latest release version from GitHub
+    #>
+    try {
+        $releases = Invoke-RestMethod "https://api.github.com/repos/tracerman/trismegistus/releases/latest" -TimeoutSec 5
+        return $releases.tag_name -replace '^v', ''
+    } catch {
+        return $null
+    }
+}
+
+function Test-TrisUpdateAvailable {
+    <#
+    .SYNOPSIS
+        Check if an update is available
+    #>
+    $current = $script:TrisVersion
+    $latest = Get-TrisLatestVersion
+    if ($latest -and [version]$latest -gt [version]$current) {
+        return @{ Available = $true; Current = $current; Latest = $latest }
+    }
+    return @{ Available = $false; Current = $current; Latest = $latest }
+}
+
+function ai-update {
+    <#
+    .SYNOPSIS
+        Check for and install Trismegistus updates
+    .DESCRIPTION
+        Checks GitHub releases for new versions and optionally installs them.
+        Your config.json is preserved during updates.
+    .PARAMETER Check
+        Only check for updates, don't install
+    .PARAMETER Force
+        Skip confirmation prompts
+    .EXAMPLE
+        ai-update           # Check and install if available
+        ai-update -Check    # Just check, don't install
+        ai-update -Force    # Install without confirmation
+    #>
+    param(
+        [switch]$Check,
+        [switch]$Force
+    )
+
+    Write-TrisMessage "RUN" "Checking for updates..."
+
+    $update = Test-TrisUpdateAvailable
+
+    if (!$update.Latest) {
+        Write-TrisMessage "ERROR" "Could not check for updates. Check internet connection."
+        return
+    }
+
+    Write-TrisMessage "INFO" "Current version: v$($update.Current)"
+    Write-TrisMessage "INFO" "Latest version:  v$($update.Latest)"
+
+    if (!$update.Available) {
+        Write-TrisMessage "DONE" "Already on latest version"
+        return
+    }
+
+    Write-Host ""
+    Write-TrisMessage "INFO" "Update available: v$($update.Current) → v$($update.Latest)"
+
+    if ($Check) { return }
+
+    if (!$Force) {
+        $confirm = Read-Host "`nInstall update? (Y/n)"
+        if ($confirm -eq 'n') { return }
+    }
+
+    # Check if we're in a git repo
+    if (!(Test-Path (Join-Path $script:TrisRoot ".git"))) {
+        Write-TrisMessage "ERROR" "Not a git installation. Please reinstall from GitHub."
+        Write-Host "  git clone https://github.com/tracerman/trismegistus.git ~/.trismegistus" -ForegroundColor Gray
+        return
+    }
+
+    # Backup config
+    $configPath = Join-Path $script:TrisRoot "config.json"
+    $backupPath = Join-Path $script:TrisRoot "config.json.backup"
+    if (Test-Path $configPath) {
+        Write-TrisMessage "INFO" "Backing up config.json..."
+        Copy-Item $configPath $backupPath -Force
+    }
+
+    # Git fetch and checkout
+    Write-TrisMessage "RUN" "Downloading update..."
+    Push-Location $script:TrisRoot
+    try {
+        git fetch --tags 2>$null
+        git checkout "v$($update.Latest)" 2>$null
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-TrisMessage "DONE" "Updated to v$($update.Latest)"
+            Write-Host ""
+            Write-TrisMessage "INFO" "Run '. `$PROFILE' to reload, or open new terminal"
+
+            # Clear update cache
+            $updateCacheFile = Join-Path $script:TrisRoot ".update-check"
+            if (Test-Path $updateCacheFile) {
+                Remove-Item $updateCacheFile -Force
+            }
+        } else {
+            throw "Git checkout failed"
+        }
+    } catch {
+        Write-TrisMessage "ERROR" "Update failed: $_"
+        if (Test-Path $backupPath) {
+            Write-TrisMessage "INFO" "Restoring config backup..."
+            Copy-Item $backupPath $configPath -Force
+        }
+    } finally {
+        Pop-Location
+    }
 }
 
 # ============================================================================
@@ -2403,7 +2523,7 @@ function ai-flow-feature {
     param([Parameter(Mandatory)][string]$Task)
     
     Write-TrisBanner -Mini
-    Write-TrisMessage "INVOKE" "Initiating Feature Pipeline: $Task"
+    Write-TrisMessage "RUN" "Starting Feature Pipeline: $Task"
     
     Write-Host "`n[1/3] Architecture Phase" -ForegroundColor Magenta
     ai-architect $Task
@@ -2417,7 +2537,7 @@ function ai-flow-feature {
     ai-verify
     
     Write-Host ""
-    Write-TrisMessage "COMPLETE" "Pipeline complete. Run 'ai-exec' to build."
+    Write-TrisMessage "DONE" "Pipeline complete. Run 'ai-exec' to build."
 }
 
 function ai-flow-bugfix {
@@ -2430,7 +2550,7 @@ function ai-flow-bugfix {
     param([Parameter(Mandatory)][string]$Issue)
     
     Write-TrisBanner -Mini
-    Write-TrisMessage "INVOKE" "Initiating Bugfix Pipeline: $Issue"
+    Write-TrisMessage "RUN" "Starting Bugfix Pipeline: $Issue"
     
     Write-Host "`n[1/2] Analysis Phase" -ForegroundColor Cyan
     ai-debug
@@ -2439,12 +2559,45 @@ function ai-flow-bugfix {
     Write-Host "`n[2/2] Execution Phase" -ForegroundColor Yellow
     ai-exec
     
-    Write-TrisMessage "COMPLETE" "Bugfix complete. Run 'ai-commit' when ready."
+    Write-TrisMessage "DONE" "Bugfix complete. Run 'ai-commit' when ready."
 }
 
 # ============================================================================
 # STARTUP
 # ============================================================================
+
+# Silent update check (non-blocking, cached daily)
+$updateCacheFile = Join-Path $script:TrisRoot ".update-check"
+$shouldCheck = $true
+
+if (Test-Path $updateCacheFile) {
+    $lastCheck = (Get-Item $updateCacheFile).LastWriteTime
+    if ((Get-Date) - $lastCheck -lt [TimeSpan]::FromHours(24)) {
+        $shouldCheck = $false
+    }
+}
+
+if ($shouldCheck) {
+    # Run in background to not slow startup
+    Start-Job -ScriptBlock {
+        param($root, $version)
+        try {
+            $releases = Invoke-RestMethod "https://api.github.com/repos/tracerman/trismegistus/releases/latest" -TimeoutSec 3
+            $latest = $releases.tag_name -replace '^v', ''
+            if ([version]$latest -gt [version]$version) {
+                "UPDATE_AVAILABLE:$latest" | Set-Content (Join-Path $root ".update-check")
+            } else {
+                "UP_TO_DATE" | Set-Content (Join-Path $root ".update-check")
+            }
+        } catch { }
+    } -ArgumentList $script:TrisRoot, $script:TrisVersion | Out-Null
+}
+
+# Show notification if update was found (from previous check)
+if ((Test-Path $updateCacheFile) -and (Get-Content $updateCacheFile -Raw) -match "UPDATE_AVAILABLE:(.+)") {
+    $newVersion = $Matches[1].Trim()
+    Write-Host "  ⚗ Update available: v$newVersion (run 'ai-update')" -ForegroundColor Yellow
+}
 
 # Display subtle initialization message
 if ($script:Config.theme -eq "hermetic") {

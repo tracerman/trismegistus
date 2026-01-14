@@ -102,7 +102,7 @@ ai-config set routing.<command-name> <provider>
 |---------|---------|---------------------|
 | **Planning Phase** | | |
 | `ai-plan` | Create execution plan | claude (complex) |
-| `ai-verify` | Hostile plan review | claude |
+| `ai-verify` | Critical plan review | claude |
 | `ai-architect` | Tree of Thoughts design | claude |
 | `ai-estimate` | Complexity analysis | claude |
 | `ai-research` | Deep research | claude |

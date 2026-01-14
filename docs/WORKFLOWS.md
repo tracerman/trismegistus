@@ -123,7 +123,7 @@ code .tris/reference/architecture_decision.md
 # 5. Create implementation plan based on architecture
 ai-plan "Implement plugin system based on architecture_decision.md"
 
-# 6. Hostile review of the plan
+# 6. Critical review of the plan
 ai-verify
 
 # 7. Execute
@@ -151,7 +151,7 @@ ai-commit
 
 They debate trade-offs and converge on the best solution, saved to `.tris/reference/architecture_decision.md`.
 
-**ai-verify** acts as a hostile code reviewer, looking for logic gaps, race conditions, and hallucinations.
+**ai-verify** acts as a critical code reviewer, looking for logic gaps, race conditions, and hallucinations.
 
 **ai-review** reviews the *actual code changes* (not just the plan) for bugs and issues.
 
@@ -306,7 +306,7 @@ ai-ship -Force
 ║  SHIPPING PIPELINE                                            ║
 ╠═══════════════════════════════════════════════════════════════╣
 ║  Phase 1: ai-diff     → Show what changed                     ║
-║  Phase 2: ai-review   → Hostile code review                   ║
+║  Phase 2: ai-review   → Critical code review                  ║
 ║  Phase 3: ai-test     → Run tests, analyze failures           ║
 ║  Phase 4: ai-commit   → Commit if all pass                    ║
 ╚═══════════════════════════════════════════════════════════════╝
@@ -535,7 +535,7 @@ ai-config set routing.ai-commit ollama
 | `ai-research <topic>` | Deep research | Unfamiliar tech |
 | `ai-architect <problem>` | Tree of Thoughts | When "how" is unclear |
 | `ai-plan <task>` | Create execution plan | Starting any task |
-| `ai-verify` | Hostile review | Before complex executions |
+| `ai-verify` | Critical review | Before complex executions |
 | `ai-split` | Break into phases | When plan is too large |
 
 ### Phase 2: Execute

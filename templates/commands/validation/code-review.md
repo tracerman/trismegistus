@@ -1,5 +1,5 @@
 ---
-description: Hostile technical code review focused on bugs and quality
+description: Critical technical code review focused on bugs and quality
 ---
 
 # Code Review: Technical Analysis
